@@ -18,7 +18,7 @@ h1 {
 }
 .main {
 	width: 400px;
-	background: #2d1117;
+	
 	border-radius: 10px;
 	box-shadow: 5px 20px 50px #000;
 	padding: 20px;
@@ -26,7 +26,7 @@ h1 {
 	color: #fff;
 }
 .group-overview label {
-	color: #e66b8a;
+	color: #fff;
 	font-size: 2em;
 	display: block;
 	margin-bottom: 20px;
@@ -39,7 +39,7 @@ h1 {
 	gap: 10px;
 }
 .group-item {
-	background: #7F3447;
+	background: #e0dede;
 	border-radius: 5px;
 	padding: 10px;
 	display: flex;
@@ -48,11 +48,11 @@ h1 {
 }
 .group-item h2 {
 	margin: 0;
-	color: #fff;
+	color: #7A0D28;
 }
 .group-item p {
 	margin: 5px 0;
-	color: #e0dede;
+	color: #fff;
 }
 button {
 	width: 80%;
@@ -68,6 +68,10 @@ button {
 	border-radius: 5px;
 	transition: .2s ease-in;
 	cursor: pointer;
+}
+.btn-add {
+    width: 40px;
+    border-radius: 50%;
 }
 button:hover {
 	background: #9C1134;
