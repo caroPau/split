@@ -7,14 +7,14 @@ body{
 	min-height: 100vh;
 	font-family: 'Jost', sans-serif;
 	background: linear-gradient(to bottom, #2d1117, #7F3447, #4b1825);
-	position: relative; /* Add this line */
+	position: relative; 
 }
 h1 { 
 	color: #e66b8a;
-	position: absolute; /* Add this line */
-	top: 20px; /* Adjust as needed */
-	left: 20px; /* Adjust as needed */
-	margin: 0; /* Add this line to remove default margin */
+	position: absolute; 
+	top: 20px; 
+	left: 20px; 
+	margin: 0;
 }
 .main{
 	width: 350px;

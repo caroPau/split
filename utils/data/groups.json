@@ -1,0 +1,50 @@
+[
+  {
+    "id": 0,
+    "name": "Schinkel WG",
+    "noOfMembers": 2,
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "groupImage": "group-1-cover.jpg",
+    "users": [
+      {
+        "_id": "5c88fa8cf4afda39709c2959",
+        "name": "Miri",
+        "admin": true
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2959",
+        "name": "Caro",
+        "admin": false
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "Italien Ausflug",
+    "noOfMembers": 4,
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "groupImage": "group-2-cover.jpg",
+    "users": [
+      {
+        "_id": "a1",
+        "name": "Miri",
+        "admin": true
+      },
+      {
+        "_id": "a2",
+        "name": "Caro",
+        "admin": false
+      },
+      {
+        "_id": "a3",
+        "name": "Vladi",
+        "admin": false
+      },
+      {
+        "_id": "a4",
+        "name": "Markus",
+        "admin": false
+      }
+    ]
+  }
+]
