@@ -1,3 +1,4 @@
+// Importiere notwendige Module
 const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
@@ -11,35 +12,37 @@ const globalErrorHandler = require("./controllers/errorController");
 const expenseRouter = require("./routes/expenseRoutes");
 const userRouter = require("./routes/userRoutes");
 
+// Erstelle eine Express-Anwendung
 const app = express();
 
-// 1) GLOBAL MIDDLEWARES
-// Set security HTTP headers
+// GLOBALE MIDDLEWARE
+
+// Setze Sicherheits-HTTP-Header mit Helmet
 app.use(helmet());
 
-// Development logging
+// Logge HTTP-Anfragen im Entwicklungsmodus
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Limit requests from same API
+// Begrenze die Anzahl der Anfragen von derselben IP
 const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000, // 1 hour
-  message: "Too many requests from this IP, please try again in an hour!",
+  max: 100, // Maximal 100 Anfragen
+  windowMs: 60 * 60 * 1000, // Pro Stunde
+  message: "Too many requests from this IP, please try again in an hour!", // Fehlermeldung bei Überschreitung
 });
 app.use("/api", limiter);
 
-// Body parser, reading data from body into req.body
+// Body-Parser, liest JSON-Daten aus dem Anfragekörper
 app.use(express.json({ limit: "10kb" }));
 
-// Data sanitization against NoSQL query injection
+// Datenbereinigung gegen NoSQL-Injection
 app.use(mongoSanitize());
 
-// Data sanitization against XSS
+// Datenbereinigung gegen XSS (Cross-Site Scripting)
 app.use(xss());
 
-// Prevent parameter pollution
+// Verhindere Parameterverunreinigung
 app.use(
   hpp({
     whitelist: [
@@ -49,27 +52,32 @@ app.use(
       "description",
       "splitWith",
       "settled",
-    ],
+    ], // Erlaube diese Parameter mehrfach
   })
 );
 
-// Serving static files
+// Statische Dateien aus dem public-Verzeichnis bereitstellen
 app.use(express.static(`${__dirname}/public`));
 
-// Test middleware
+// Test-Middleware, fügt die Anfragezeit zur Anfrage hinzu
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 
-// 3) ROUTES
+// ROUTES
+
+// Benutze die Routen für Expenses und Users
 app.use("/api/v1/expenses", expenseRouter);
 app.use("/api/v1/users", userRouter);
 
+// Fange alle nicht definierten Routen ab und erstelle einen Fehler
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
+// Globale Fehlerbehandlungs-Middleware
 app.use(globalErrorHandler);
 
+// Exportiere die Express-Anwendung
 module.exports = app;
