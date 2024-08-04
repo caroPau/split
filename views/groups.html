@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Splitmate - Gruppenübersicht</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="utilities/img/favicon.png" />
-</head>
-<body>
-	<header>
-		<h1>Splitmate</h1>
-	</header>
+  <head>
+    <title>Splitmate - Gruppenübersicht</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="utilities/img/favicon.png"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Splitmate</h1>
+    </header>
     <div class="container">
-		<div class="main">
-			<div class="group-overview">
-				<label for="chk" aria-hidden="true">My Groups</label>
-				<div class="group-list">
-					<div class="group-item">
-						<h2>Group 1</h2>
-						
-						<button type="button">Details</button>
-					</div>
-					<div class="group-item">
-						<h2>Group 2</h2>
-						
-						<button type="button">Details</button>
-					</div>
-					<!-- Weitere Gruppen können hier hinzugefügt werden -->
-				</div>
-				<button type="button" class="btn-add" id="btn_create_group">+</button>
-			</div>
-		</div>
-	</div>
-</body>
+      <div class="main">
+        <div class="group-overview">
+          <label for="chk" aria-hidden="true">My Groups</label>
+          <div class="group-list">
+            <div class="group-item">
+              <h2>Group 1</h2>
+
+              <button type="button">Details</button>
+            </div>
+            <div class="group-item">
+              <h2>Group 2</h2>
+
+              <button type="button">Details</button>
+            </div>
+            <!-- Weitere Gruppen können hier hinzugefügt werden -->
+          </div>
+          <a href="http://localhost:3000/groups/newGroup">
+            <button type="button" class="btn-add" id="btn_create_group">
+              +
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

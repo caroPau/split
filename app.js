@@ -20,10 +20,19 @@ const app = express();
 // Root route to serve hello.html
 // Serving static files
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "views")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "hello.html"));
 });
+
+app.get("/groups", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "groups.html"))
+})
+
+app.get("/groups/newGroup", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "addGroup.html"));
+})
 
 // // GLOBALE MIDDLEWARE
 
