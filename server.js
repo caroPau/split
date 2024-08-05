@@ -1,6 +1,5 @@
-// Importiere Mongoose für die MongoDB-Verbindung und dotenv für das Laden von Umgebungsvariablen
+// Importiere Mongoose für die MongoDB-Verbindung
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 
 // // Fange alle nicht gefangenen Ausnahmen ab, um unerwartete Abstürze zu verhindern
 // process.on("uncaughtException", (err) => {
@@ -9,13 +8,11 @@ const dotenv = require("dotenv");
 //   process.exit(1); // Beende den Prozess nach dem Loggen der Fehlerdetails
 // });
 
-// // Lade Umgebungsvariablen aus der config.env Datei
-dotenv.config({ path: "./config.env" });
 // Importiere die Express-App aus der app.js
 const app = require("./app");
 
 // Ersetze das Platzhalter-Passwort in der Datenbank-URL mit dem tatsächlichen Passwort aus den Umgebungsvariablen
-const DB = "mongodb://127.0.0.1:27017/splitmate";
+const DB = process.env.DATABASE || "mongodb://127.0.0.1:27017/splitmate";
 
 // Verbinde mit der MongoDB-Datenbank
 /* 
