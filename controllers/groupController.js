@@ -10,10 +10,10 @@ exports.createGroup = catchAsync(async (req, res, next) => {
         return next(new AppError("Please provide all required fields", 400));
     }
 
-    const newGroup = {
+    const newGroup = await Group.create({
         groupName,
         groupMembers
-    };
+    });
 
     res.status(201).json({
         status: "success",

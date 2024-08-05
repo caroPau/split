@@ -26,7 +26,7 @@
             const groupName = document.getElementById('groupName').value;
             const groupMembers = document.getElementById('groupMembers').value.split(',').map(name => name.trim());
 
-            const response = await fetch('/api/v1/groups', {
+            const response = await fetch('/api/v1/groups/newGroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
