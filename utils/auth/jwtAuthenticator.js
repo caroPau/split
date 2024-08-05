@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 function validateToken(token) {
   let decoded;
   try {
@@ -13,3 +15,5 @@ function validateToken(token) {
     };
   }
 }
+
+module.exports = { validateToken };

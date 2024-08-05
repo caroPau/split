@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide a password"], // Validierung: Passwort erforderlich
     minlength: 1, // Mindestlänge des Passworts
   },
+  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 });
 
 // // Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen

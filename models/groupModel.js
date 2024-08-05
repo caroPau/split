@@ -5,15 +5,8 @@ const groupSchema = new mongoose.Schema({
   groupName: {
     type: String,
     required: [true, "Please provide a groupname"],
-    unique: true, // Muss eindeutig sein
   },
-  groupMembers: [
-    {
-      type: mongoose.Schema.Types.Array,
-      ref: "User",
-      unique: false,
-    },
-  ],
+  groupMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Group = mongoose.model("Group", groupSchema);
