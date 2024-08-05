@@ -4,6 +4,8 @@ const AppError = require("./../utils/appError");
 
 exports.createGroup = catchAsync(async (req, res, next) => {
   //TODO jwt überprüfen, dann rest ausführen
+  const token = req.headers.authorization.split(" ")[1];
+  token = jwt.verify(token, process.env.JWT_SECRET);
 
   const { groupName, groupMembers } = req.body;
 

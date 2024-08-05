@@ -31,6 +31,8 @@ exports.login = catchAsync(async (req, res, next) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit
         });
+        // Set the token in the response headers
+        res.setHeader("Authorization", `Bearer ${token}`);
         res.status(200).json({
           status: "success",
           token,
