@@ -3,6 +3,8 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 
 exports.createGroup = catchAsync(async (req, res, next) => {
+  //TODO jwt überprüfen, dann rest ausführen
+
   const { groupName, groupMembers } = req.body;
 
   if (!groupName || !groupMembers) {
