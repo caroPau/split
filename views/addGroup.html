@@ -26,10 +26,13 @@
             const groupName = document.getElementById('groupName').value;
             const groupMembers = document.getElementById('groupMembers').value.split(',').map(name => name.trim());
 
+            let token = localStorage.getItem('token');
+
             const response = await fetch('/api/v1/groups/newGroup/create', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ groupName, groupMembers })
             });

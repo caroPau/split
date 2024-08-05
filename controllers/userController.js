@@ -47,13 +47,51 @@ exports.register = catchAsync(async (req, res, next) => {
   });
 });
 
-// Controller zum Erstellen eines Benutzers (noch nicht definiert)
-exports.createUser = (req, res) => {
-  res.status(201).json({
-    status: "success",
-    message: "User erfolgreich angelegt",
-  });
-};
+exports.findUserByUsername = catchAsync(async (req, res, next) => {
+  const { username, password } = req.body;
+  console.log("Username: ", username);
+
+  // Find the user by username
+  const user = await User.findOne({ username });
+
+  // Check if user exists
+  if (!user) {
+    return res.status(400).json({
+      status: "error",
+      message: "User does not exist. Cannot login with that username.",
+    });
+  }
+  console.log("Password: " + user.password);
+
+  user
+    .correctPassword(password, user.password)
+    .then((isMatch) => {
+      if (isMatch) {
+        console.log("Passwords match");
+
+        // JWT Token erstellen und senden
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit
+        });
+        res.status(200).json({
+          status: "success",
+          token,
+          data: {
+            user,
+          },
+        });
+      } else {
+        console.log("Passwords do not match");
+        return res.status(400).json({
+          status: "error",
+          message: "Invalid password. Cannot login with that password.",
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
 
 // Controller zum Löschen eines Benutzers (noch nicht definiert)
 exports.deleteUser = (req, res) => {

@@ -12,8 +12,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"], // Validierung: Passwort erforderlich
-    minlength: 8, // Mindestlänge des Passworts
-    select: false, // Passwort wird standardmäßig nicht aus der Datenbank abgerufen
+    minlength: 1, // Mindestlänge des Passworts
   },
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
 });
@@ -25,14 +24,14 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// // Instanzmethode, um das Passwort des Benutzers zu überprüfen
-// userSchema.methods.correctPassword = async function (
-//   candidatePassword, // Das vom Benutzer eingegebene Passwort
-//   userPassword // Das in der Datenbank gespeicherte Passwort
-// ) {
-//   // Vergleiche das eingegebene Passwort mit dem gespeicherten Passwort
-//   return await bcrypt.compare(candidatePassword, userPassword);
-// };
+// Instanzmethode, um das Passwort des Benutzers zu überprüfen
+userSchema.methods.correctPassword = async function (
+  candidatePassword, // Das vom Benutzer eingegebene Passwort
+  userPassword // Das in der Datenbank gespeicherte Passwort
+) {
+  // Vergleiche das eingegebene Passwort mit dem gespeicherten Passwort
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 // Erstelle das User-Modell basierend auf dem Schema
 const User = mongoose.model("User", userSchema);
