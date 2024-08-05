@@ -7,15 +7,9 @@ const groupSchema = new mongoose.Schema({
     required: [true, "Please provide a groupname"],
     unique: true, // Muss eindeutig sein
   },
-  groupMembers: [
-    {
-      type: mongoose.Schema.Types.Array,
-      ref: "User",
-      unique: false,
-    },
-  ],
+  users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
-
+ 
 const Group = mongoose.model("Group", groupSchema);
 
 // Exportiere das Group-Modell

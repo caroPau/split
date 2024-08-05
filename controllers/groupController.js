@@ -5,6 +5,8 @@ const AppError = require("./../utils/appError");
 exports.createGroup = catchAsync(async (req, res, next) => {
   const { groupName, groupMembers } = req.body;
 
+  console.log("GRUP MEMBAS: ", groupMembers)
+
   if (!groupName || !groupMembers) {
     return next(new AppError("Please provide all required fields", 400));
   }

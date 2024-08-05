@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     minlength: 8, // Mindestlänge des Passworts
     select: false, // Passwort wird standardmäßig nicht aus der Datenbank abgerufen
   },
+  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
 });
 
 // // Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen
