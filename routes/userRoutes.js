@@ -7,6 +7,8 @@ const router = express.Router();
 // Route für die Registrierung eines neuen Benutzers
 router.post("/register", userController.register);
 router.post("/login", authController.login);
+router.post("/logout", authController.logout);
+
 
 // // Route für das Login eines Benutzers
 // router.post("/login", authController.login);

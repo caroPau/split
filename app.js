@@ -22,6 +22,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "views")));
 
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "hello.html"));
 });

@@ -7,11 +7,11 @@
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link
+    <!-- <link
       rel="shortcut icon"
       type="image/png"
       href="utilities/img/favicon.png"
-    />
+    /> -->
   </head>
   <body>
     <header>
@@ -41,6 +41,32 @@
           </a>
         </div>
       </div>
+      <button type="button" id="btn-logout">Logout</button>
     </div>
+    <script>
+      document
+        .getElementById("btn-logout")
+        .addEventListener("click", async function (event) {
+          event.preventDefault();
+          try {
+            const response = await fetch("/api/v1/users/logout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            if (response.ok) {
+              alert("Logged out successfully");
+              localStorage.removeItem("token");
+              window.location.href = "http://localhost:3000";
+            } else {
+              alert("Error logging out");
+            }
+          } catch (error) {
+            alert("An error occured: " + error.message);
+          }
+        });
+    </script>
   </body>
 </html>

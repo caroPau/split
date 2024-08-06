@@ -52,6 +52,12 @@ exports.login = catchAsync(async (req, res, next) => {
       console.error(err);
     });
 });
+
+exports.logout = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+  });
+}
 // exports.login = catchAsync(async (req, res, next) => {
 //   // Extrahiere Login-Daten aus dem Anfragekörper
 //   const { login_name, login_password } = req.body;
