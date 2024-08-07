@@ -2,6 +2,7 @@
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const { validateToken } = require("./../utils/auth/jwtAuthenticator")
 
 // Controller zum Abrufen aller Benutzer
 // exports.getAllUsers = catchAsync(async (req, res, next) => {
@@ -47,7 +48,44 @@ exports.register = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.findUserByUsername = catchAsync(async (req, res, next) => {
+exports.getMyGroups = catchAsync(async(req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+
+  if(!token){
+    return res.status(401).json({
+      status: "fail",
+      message:"No token provided"
+    });
+  }
+  const result = validateToken(token);
+
+  if(!result.success){
+    return res.status(401).json({
+      status: "fail",
+      message: "Invalid token."
+    });
+  }
+
+  const userId = result.data.id;
+
+  const user = await User.findById(userId).populate("groups");
+
+  if(!user){
+    return res.status(404).json({
+      status:"fail",
+      message: "User not found"
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      groups: user.groups,
+    }
+  });
+});
+
+/*exports.findUserByUsername = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
   console.log("Username: ", username);
 
@@ -91,7 +129,7 @@ exports.findUserByUsername = catchAsync(async (req, res, next) => {
     .catch((err) => {
       console.error(err);
     });
-});
+});*/
 
 // Controller zum Löschen eines Benutzers (noch nicht definiert)
 exports.deleteUser = (req, res) => {

@@ -21,8 +21,8 @@
       <div class="main">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
-          <div class="group-list">
-            <div class="group-item">
+          <div class="group-list" id="group-list">
+            <!-- <div class="group-item">
               <h2>Group 1</h2>
 
               <button type="button">Details</button>
@@ -31,7 +31,7 @@
               <h2>Group 2</h2>
 
               <button type="button">Details</button>
-            </div>
+            </div> -->
             <!-- Weitere Gruppen können hier hinzugefügt werden -->
           </div>
           <a href="http://localhost:3000/groups/newGroup">
@@ -43,30 +43,6 @@
       </div>
       <button type="button" id="btn-logout">Logout</button>
     </div>
-    <script>
-      document
-        .getElementById("btn-logout")
-        .addEventListener("click", async function (event) {
-          event.preventDefault();
-          try {
-            const response = await fetch("/api/v1/users/logout", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-
-            if (response.ok) {
-              alert("Logged out successfully");
-              localStorage.removeItem("token");
-              window.location.href = "http://localhost:3000";
-            } else {
-              alert("Error logging out");
-            }
-          } catch (error) {
-            alert("An error occured: " + error.message);
-          }
-        });
-    </script>
+    <script src="groups.js"></script>
   </body>
 </html>

@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/register", userController.register);
 router.post("/login", authController.login);
 router.post("/logout", authController.logout);
-
+router.get("/myGroups", userController.getMyGroups);
 
 // // Route für das Login eines Benutzers
 // router.post("/login", authController.login);
