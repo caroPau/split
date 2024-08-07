@@ -21,8 +21,7 @@ document
 
       const result = await response.json();
       if (response.ok) {
-        alert("Registration successful!");
-        window.location.href = "http://localhost:3000/groups";
+        alert("Registration successful! Please Login!");
       } else {
         alert("Error: " + result.message);
       }

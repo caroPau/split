@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
 // // Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen
 userSchema.pre("save", async function (next) {
   // Hash das Passwort mit Bcrypt
+  if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });

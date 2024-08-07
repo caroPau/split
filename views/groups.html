@@ -2,16 +2,13 @@
 <html>
   <head>
     <title>Splitmate - Gruppenübersicht</title>
-    <link rel="stylesheet" type="text/css" href="groups.css" />
+    <link rel="icon" type="image/png" src="utils/img/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="./css/groups.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
     />
-    <!-- <link
-      rel="shortcut icon"
-      type="image/png"
-      href="utilities/img/favicon.png"
-    /> -->
+   <!-- <link rel="icon" type="image/png" href="/logo.png" /> -->
   </head>
   <body>
     <header>
@@ -21,20 +18,8 @@
       <div class="main">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
-          <div class="group-list" id="group-list">
-            <!-- <div class="group-item">
-              <h2>Group 1</h2>
-
-              <button type="button">Details</button>
-            </div>
-            <div class="group-item">
-              <h2>Group 2</h2>
-
-              <button type="button">Details</button>
-            </div> -->
-            <!-- Weitere Gruppen können hier hinzugefügt werden -->
-          </div>
-          <a href="http://localhost:3000/groups/newGroup">
+          <div class="group-list" id="group-list"></div>
+          <a href="./addGroup.html">
             <button type="button" class="btn-add" id="btn_create_group">
               +
             </button>
@@ -43,6 +28,6 @@
       </div>
       <button type="button" id="btn-logout">Logout</button>
     </div>
-    <script src="groups.js"></script>
+    <script src="./js/groups.js"></script>
   </body>
 </html>
