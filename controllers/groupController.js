@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const { validateToken } = require("./../utils/auth/jwtAuthenticator");
 
 exports.createGroup = catchAsync(async (req, res, next) => {
-  //TODO jwt überprüfen, dann rest ausführen
 
   const token = req.headers.authorization.split(" ")[1];
   let { success, data } = validateToken(token);
@@ -34,9 +33,17 @@ exports.createGroup = catchAsync(async (req, res, next) => {
       user.groups.push(newGroup._id);
       newGroup.groupMembers.push(user._id);
       await user.save();
+    }else{
+      res.status(400).json({
+        status: "fail",
+        data: {
+          "username": username,
+          "groupid": newGroup._id
+        }
+      });
+      
     }
   }
-
   await newGroup.save();
 
   res.status(201).json({
@@ -46,3 +53,29 @@ exports.createGroup = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.validateUsers = async (req, res, next) => {
+  const { users } = req.body;
+  const invalidUsers = [];
+  
+  for(const username of users){
+    const user = await User.findOne({ username });
+    
+    if(!user){
+      invalidUsers.push(username);
+    }
+  }
+
+  if(invalidUsers.length > 0){
+    return res.status(400).json({
+      status: "fail",
+      allUsersValid: false,
+      message: "Ein oder mehrere Member sind ungültig."
+    });
+  }
+
+  return res.status(200).json({
+    status: "success",
+    allUsersValid: true
+  });
+};

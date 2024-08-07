@@ -20,6 +20,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let token = localStorage.getItem("token");
 
+      const userValidationResponse = await fetch("/api/v1/groups/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({users: groupMembers}),
+      });
+
+      const validationResult = await userValidationResponse.json();
+
+      if(!userValidationResponse.ok || !validationResult.allUsersValid){
+          document.getElementById("responseMessage").innerHTML = "Ein oder mehrere Benutzer sind ungültig.";
+          return;
+      }
       const response = await fetch("/api/v1/groups/newGroup/create", {
         method: "POST",
         headers: {
@@ -35,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("responseMessage").innerText =
           "Gruppe erfolgreich erstellt!";
       } else {
-        document.getElementById(
-          "responseMessage"
-        ).innerText = `Fehler: ${result.message}`;
       }
     });
   } else {

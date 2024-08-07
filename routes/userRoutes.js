@@ -11,6 +11,7 @@ router.post("/logout", authController.logout);
 router.get("/myGroups", userController.getMyGroups);
 
 
+
 // // Route für das Aktualisieren des Benutzers, Authentifizierung erforderlich
 // router.patch("/updateMe", authController.protect, userController.updateMe);
 
