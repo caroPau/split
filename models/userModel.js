@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"], // Validierung: Passwort erforderlich
-    minlength: 1, // Mindestlänge des Passworts
+    minlength: 1, // Mindestlänge des Passworts,
+    select: false,
   },
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 });

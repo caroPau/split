@@ -21,18 +21,8 @@
       <div class="main">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
-          <div class="group-list">
-            <div class="group-item">
-              <h2>Group 1</h2>
-
-              <button type="button">Details</button>
-            </div>
-            <div class="group-item">
-              <h2>Group 2</h2>
-
-              <button type="button">Details</button>
-            </div>
-            <!-- Weitere Gruppen können hier hinzugefügt werden -->
+          <div class="group-list" id="groupList">
+            <!-- Gruppen werden hier dynamisch hinzugefügt -->
           </div>
           <a href="http://localhost:3000/groups/newGroup">
             <button type="button" class="btn-add" id="btn_create_group">
@@ -42,5 +32,45 @@
         </div>
       </div>
     </div>
+
+    <script>
+      async function loadGroups() {
+        let token = localStorage.getItem('token');
+
+        const response = await fetch('/api/v1/groups', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        return await response.json();
+      }
+
+      async function displayGroups() {
+        const groups = await loadGroups();
+
+        const groupList = document.getElementById('groupList');
+        groupList.innerHTML = '';
+
+        if (groups.data.groups.length > 0) {
+          groups.data.groups.forEach((group) => {
+            const groupItem = document.createElement('div');
+            groupItem.className = 'group-item';
+            groupItem.innerHTML = `
+              <h2>${group.groupName}</h2>
+              <button type="button">Details</button>
+            `;
+            groupList.appendChild(groupItem);
+          });
+        } else {
+          groupList.innerHTML = '<p>No groups found.</p>';
+        }
+      }
+
+      // Call the function to display groups when the page loads
+      displayGroups();
+    </script>
   </body>
 </html>
