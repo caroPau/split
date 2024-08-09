@@ -1,51 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neue Gruppe erstellen</title>
-</head>
-<body>
+    <link rel="icon" type="image/png" href="/favicon.png">
+  </head>
+  <body>
     <h1>Neue Gruppe erstellen</h1>
     <form id="groupForm">
-        <label for="groupName">Gruppenname:</label>
-        <input type="text" id="groupName" name="groupName" required><br><br>
+      <label for="groupName">Gruppenname:</label>
+      <input type="text" id="groupName" name="groupName" required /><br /><br />
 
-        <label for="groupMembers">Gruppenmitglieder (durch Kommas getrennte Namen):</label>
-        <input type="text" id="groupMembers" name="groupMembers"><br><br>
+      <label for="groupMembers"
+        >Gruppenmitglieder (durch Kommas getrennte Namen):</label
+      >
+      <input type="text" id="groupMembers" name="groupMembers" /><br /><br />
 
-        <button type="submit">Gruppe erstellen</button>
+      <button type="submit">Gruppe erstellen</button>
+      <button type="button" id="btn-back">Zurück</button>
     </form>
 
     <p id="responseMessage"></p>
 
-    <script>
-        document.getElementById('groupForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const groupName = document.getElementById('groupName').value;
-            const groupMembers = document.getElementById('groupMembers').value.split(',').map(name => name.trim());
-
-            let token = localStorage.getItem('token');
-
-            const response = await fetch('/api/v1/groups/newGroup/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ groupName, groupMembers })
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                document.getElementById('responseMessage').innerText = 'Gruppe erfolgreich erstellt!';
-            } else {
-                document.getElementById('responseMessage').innerText = `Fehler: ${result.message}`;
-            }
-        });
-    </script>
-</body>
-
+    <script src="./js/groups.js"></script>
+  </body>
 </html>

@@ -2,16 +2,13 @@
 <html>
   <head>
     <title>Splitmate - Gruppenübersicht</title>
-    <link rel="stylesheet" type="text/css" href="groups.css" />
+    <link rel="icon" type="image/png" src="utils/img/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="./css/groups.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="utilities/img/favicon.png"
-    />
+   <!-- <link rel="icon" type="image/png" href="/logo.png" /> -->
   </head>
   <body>
     <header>
@@ -25,12 +22,15 @@
             <!-- Gruppen werden hier dynamisch hinzugefügt -->
           </div>
           <a href="http://localhost:3000/groups/newGroup">
+          <div class="group-list" id="group-list"></div>
+          <a href="./addGroup.html">
             <button type="button" class="btn-add" id="btn_create_group">
               +
             </button>
           </a>
         </div>
       </div>
+      <button type="button" id="btn-logout">Logout</button>
     </div>
 
     <script>
@@ -72,5 +72,6 @@
       // Call the function to display groups when the page loads
       displayGroups();
     </script>
+    <script src="./js/groups.js"></script>
   </body>
 </html>
