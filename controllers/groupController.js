@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const WebSocket = require("ws");
 const Group = require("./../models/groupModel");
 const User = require("../models/userModel");
 const Expense = require("../models/expenseModel");
@@ -204,6 +205,21 @@ exports.addNewExpense = async (req, res) => {
     });
 
     await group.save();
+
+    // WebSocket-Benachrichtigung
+    const wss = req.app.get("wss");
+    if (wss) {
+      wss.clients.forEach((client) => {
+        if (
+          client.readyState === WebSocket.OPEN &&
+          client.groupId === groupId
+        ) {
+          client.send(JSON.stringify(expense));
+        }
+      });
+    } else {
+      console.log("WebSocket server not initialized");
+    }
 
     res.status(201).json(expense);
   } catch (error) {

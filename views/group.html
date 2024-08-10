@@ -1,56 +1,66 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Splitmate - Gruppenübersicht</title>
-    <link rel="icon" type="image/png" src="utils/img/favicon.png"/>
-    <!-- <link rel="stylesheet" type="text/css" href="css/groups.css" /> -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <header>
-      <h1>Splitmate</h1>
-    </header>
-    <div class="container">
-      <div class="main">
-        <div class="group-overview" id="group-overview">
-          <!-- Gruppendetails werden hier eingefügt -->
-        </div>
-      </div>
-    </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Extrahiere die Gruppen-ID aus der URL
-        const groupId = window.location.pathname.split('/').pop();
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Expenses</title>
+</head>
+<body>
+  <h1>Group Expenses</h1>
+  <div class="group-overview" id="group-overview">
+    <!-- Gruppendetails werden hier eingefügt -->
+  </div>
+  <div class="members-balances" id="members-balances">
+    <!-- Mitglieder und ihre Balances werden hier eingefügt -->
+  </div>
+  <ul id="expensesList">
+    <!-- Existing expenses will be listed here -->
+  </ul>
 
-        // Rufe die Gruppendaten vom Server ab
-        try {
-          const response = await fetch(`/api/v1/groups/${groupId}`);
-          if (!response.ok) {
-            throw new Error('Netzwerkantwort war nicht ok');
-          }
-          const group = await response.json();
-          console.log("GROUP: ", JSON.stringify(group))
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Extrahiere die Gruppen-ID aus der URL
+      const groupId = window.location.pathname.split('/').pop();
 
-          // Rendere die Gruppendaten in der HTML-Seite
-          const groupOverview = document.getElementById('group-overview');
-          groupOverview.innerHTML = `
-            <h2>Gruppe: ${group.groupName}</h2>
-            <h3>Mitglieder:</h3>
-            <ul>
-              ${group.membersWithBalances.map(memberWithBalance => `
-                <li>
-                  ${memberWithBalance.member.username} - Balance: ${memberWithBalance.balance}
-                </li>
-              `).join('')}
-            </ul>
-          `;
-        } catch (error) {
-          console.error('Es gab ein Problem mit dem Fetch-Betrieb:', error);
+      // Rufe die Gruppendaten vom Server ab
+      try {
+        const response = await fetch(`/api/v1/groups/${groupId}`);
+        if (!response.ok) {
+          throw new Error('Netzwerkantwort war nicht ok');
         }
-      });
-    </script>
-  </body>
+        const group = await response.json();
+        console.log("GROUP: ", JSON.stringify(group))
+
+        // Rendere die Gruppendaten in der HTML-Seite
+        const groupOverview = document.getElementById('group-overview');
+        groupOverview.innerHTML = `
+          <h2>${group.groupName}</h2>
+        `;
+
+        // Rendere die Mitglieder und ihre Balances
+        const membersBalances = document.getElementById('members-balances');
+        membersBalances.innerHTML = '<h3>Members and Balances</h3>';
+        group.membersWithBalances.forEach(memberWithBalance => {
+          const memberItem = document.createElement('div');
+          memberItem.textContent = `${memberWithBalance.member.username}: ${memberWithBalance.balance}`;
+          membersBalances.appendChild(memberItem);
+        });
+
+        // WebSocket-Verbindung herstellen
+        const socket = new WebSocket(`ws://localhost:8080/group/${groupId}`);
+
+        socket.addEventListener('message', function(event) {
+          const expense = JSON.parse(event.data);
+          const expensesList = document.getElementById('expensesList');
+          const listItem = document.createElement('li');
+          listItem.textContent = `${expense.description} - ${expense.amount}`;
+          expensesList.appendChild(listItem);
+        });
+
+      } catch (error) {
+        console.error('Es gab ein Problem mit dem Fetch-Betrieb:', error);
+      }
+    });
+  </script>
+</body>
 </html>
