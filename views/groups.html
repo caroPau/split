@@ -18,16 +18,12 @@
       <div class="main">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
-          <div class="group-list" id="groupList">
-            <!-- Gruppen werden hier dynamisch hinzugefügt -->
-          </div>
-          <a href="http://localhost:3000/groups/newGroup">
           <div class="group-list" id="group-list"></div>
           <a href="./addGroup.html">
             <button type="button" class="btn-add" id="btn_create_group">
               +
             </button>
-          </a>
+         
         </div>
       </div>
       <button type="button" id="btn-logout">Logout</button>
@@ -60,7 +56,7 @@
             groupItem.className = 'group-item';
             groupItem.innerHTML = `
               <h2>${group.groupName}</h2>
-              <button type="button">Details</button>
+              <a href="/groups/${group._id}">Details</a>
             `;
             groupList.appendChild(groupItem);
           });

@@ -12,8 +12,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"], // Validierung: Passwort erforderlich
-    minlength: 1, // Mindestlänge des Passworts,
-    select: false,
+    minlength: 1, // Mindestlänge des Passworts
   },
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 });
@@ -21,7 +20,7 @@ const userSchema = new mongoose.Schema({
 // // Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen
 userSchema.pre("save", async function (next) {
   // Hash das Passwort mit Bcrypt
-  if (!this.isModified('password')) return next();
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });

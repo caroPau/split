@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Splitmate - Gruppenübersicht</title>
+    <link rel="icon" type="image/png" src="utils/img/favicon.png"/>
+    <!-- <link rel="stylesheet" type="text/css" href="css/groups.css" /> -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Splitmate</h1>
+    </header>
+    <div class="container">
+      <div class="main">
+        <div class="group-overview" id="group-overview">
+          <!-- Gruppendetails werden hier eingefügt -->
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Extrahiere die Gruppen-ID aus der URL
+        const groupId = window.location.pathname.split('/').pop();
+
+        // Rufe die Gruppendaten vom Server ab
+        try {
+          const response = await fetch(`/api/v1/groups/${groupId}`);
+          if (!response.ok) {
+            throw new Error('Netzwerkantwort war nicht ok');
+          }
+          const group = await response.json();
+          console.log("GROUP: ", JSON.stringify(group))
+
+          // Rendere die Gruppendaten in der HTML-Seite
+          const groupOverview = document.getElementById('group-overview');
+          groupOverview.innerHTML = `
+            <h2>Gruppe: ${group.groupName}</h2>
+            <h3>Mitglieder:</h3>
+            <ul>
+              ${group.membersWithBalances.map(memberWithBalance => `
+                <li>
+                  ${memberWithBalance.member.username} - Balance: ${memberWithBalance.balance}
+                </li>
+              `).join('')}
+            </ul>
+          `;
+        } catch (error) {
+          console.error('Es gab ein Problem mit dem Fetch-Betrieb:', error);
+        }
+      });
+    </script>
+  </body>
+</html>

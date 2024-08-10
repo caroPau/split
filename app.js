@@ -2,7 +2,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const helmet = require('helmet');
+const helmet = require("helmet");
 
 // const rateLimit = require("express-rate-limit");
 // const helmet = require("helmet");
@@ -20,36 +20,46 @@ const groupRouter = require("./routes/groupRoutes");
 const app = express();
 
 // Helmet um Sicherheitseinstellungen vornehmen zu können/ Favicon laden zu können
-app.use(helmet());
+//app.use(helmet());
 
-app.use(
+/* app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
     defaultSrc: ["'self'"],
     imgSrc: ["'self'", "data:"],
     connectSrc: ["'self'"],
     scriptSrc: ["'self'"],
-    styleSrc: ["'self'", "https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"]
+    styleSrc: [
+      "'self'",
+      "https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap",
+    ],
   })
-)
+); */
 // Root route to serve hello.html
 // Serving static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "views")));
 app.use(express.static(path.join(__dirname, "utils", "img")));
 
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "hello.html"));
 });
 
 app.get("/groups", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "groups.html"))
-})
+  res.sendFile(path.join(__dirname, "views", "groups.html"));
+});
 
 app.get("/groups/newGroup", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "addGroup.html"));
-})
+});
+
+app.get("/groups/:id", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "group.html"));
+});
+
+app.get("/groups/:id/expenses", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "expenses.html"));
+});
 
 // // GLOBALE MIDDLEWARE
 

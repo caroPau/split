@@ -1,7 +1,6 @@
-// 
+//
 //  Event Listener für die Seiten groups.html und addGroup.html
 //
-
 
 //Event Listener für das Formular zum Erstellen einer Gruppe in der addGroup.html
 // liest das Formular aus, authentifiziert den User und sendet die Daten zum erstellen an den Server
@@ -21,19 +20,20 @@ document.addEventListener("DOMContentLoaded", function () {
       let token = localStorage.getItem("token");
 
       const userValidationResponse = await fetch("/api/v1/groups/validate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({users: groupMembers}),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ users: groupMembers }),
       });
 
       const validationResult = await userValidationResponse.json();
 
-      if(!userValidationResponse.ok || !validationResult.allUsersValid){
-          document.getElementById("responseMessage").innerHTML = "Ein oder mehrere Benutzer sind ungültig.";
-          return;
+      if (!userValidationResponse.ok || !validationResult.allUsersValid) {
+        document.getElementById("responseMessage").innerHTML =
+          "Ein oder mehrere Benutzer sind ungültig.";
+        return;
       }
       const response = await fetch("/api/v1/groups/newGroup/create", {
         method: "POST",
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Event Listener der beim Laden der Seite groups.html 
+// Event Listener der beim Laden der Seite groups.html
 // den User authentisiert, die Gruppen aus der Datenbank abfragt und anzeigt
 window.addEventListener("load", async () => {
   let token = localStorage.getItem("token");
@@ -122,7 +122,7 @@ window.addEventListener("load", async () => {
         const groupItem = document.createElement("div");
         groupItem.classList.add("group-item");
         groupItem.innerHTML = `<h2>${group.groupName}</h2>
-                                        <button type="button">Details</button>`;
+          <a href="/groups/${group._id}">Details</a>`;
         groupList.appendChild(groupItem);
       });
     }

@@ -7,6 +7,11 @@ const groupSchema = new mongoose.Schema({
     required: [true, "Please provide a groupname"],
   },
   groupMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  balances: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
 });
 
 const Group = mongoose.model("Group", groupSchema);
