@@ -2,7 +2,7 @@
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const { validateToken } = require("./../utils/auth/jwtAuthenticator")
+const { validateToken } = require("./../utils/auth/jwtAuthenticator");
 
 // Controller zum Abrufen aller Benutzer
 // exports.getAllUsers = catchAsync(async (req, res, next) => {
@@ -34,35 +34,53 @@ exports.register = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide all required fields", 400));
   }
 
+  // Überprüfen, ob der Benutzername bereits existiert
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    return res.status(403).json({
+      status: "fail",
+      message: "Username already exists",
+    });
+  }
+
   // Neuen Benutzer erstellen
   const newUser = await User.create({
     username,
     password,
   });
 
+  newUser.save();
+
+  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit
+  });
+  // Set the token in the response headers
+  res.setHeader("Authorization", `Bearer ${token}`);
+
   res.status(201).json({
     status: "success",
+    token,
     data: {
       user: newUser,
     },
   });
 });
 
-exports.getMyGroups = catchAsync(async(req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
+exports.getMyGroups = catchAsync(async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
 
-  if(!token){
+  if (!token) {
     return res.status(401).json({
       status: "fail",
-      message:"No token provided"
+      message: "No token provided",
     });
   }
   const result = validateToken(token);
 
-  if(!result.success){
+  if (!result.success) {
     return res.status(401).json({
       status: "fail",
-      message: "Invalid token."
+      message: "Invalid token.",
     });
   }
 
@@ -70,18 +88,18 @@ exports.getMyGroups = catchAsync(async(req, res, next) => {
 
   const user = await User.findById(userId).populate("groups");
 
-  if(!user){
+  if (!user) {
     return res.status(404).json({
-      status:"fail",
-      message: "User not found"
+      status: "fail",
+      message: "User not found",
     });
   }
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       groups: user.groups,
-    }
+    },
   });
 });
 

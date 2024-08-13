@@ -61,6 +61,10 @@ app.get("/groups/:id/expenses", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "expenses.html"));
 });
 
+app.get("/logout", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "logout.html"));
+});
+
 // // GLOBALE MIDDLEWARE
 
 // // Setze Sicherheits-HTTP-Header mit Helmet

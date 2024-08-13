@@ -1,3 +1,41 @@
+async function loadGroups() {
+  console.log("hello 1");
+  let token = localStorage.getItem("token");
+
+  const response = await fetch("/api/v1/groups", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json();
+}
+
+async function displayGroups() {
+  const groups = await loadGroups();
+
+  const groupList = document.getElementById("groupList");
+  groupList.innerHTML = " ";
+
+  if (groups.data.groups.length > 0) {
+    groups.data.groups.forEach((group) => {
+      const groupItem = document.createElement("div");
+      groupItem.className = "group-item";
+      groupItem.innerHTML = `
+        <h2>${group.groupName}</h2>
+        <a href="/groups/${group._id}">Details</a>
+      `;
+      groupList.appendChild(groupItem);
+    });
+  } else {
+    groupList.innerHTML = "<p>No groups found.</p>";
+  }
+}
+
+displayGroups();
+
 //
 //  Event Listener für die Seiten groups.html und addGroup.html
 //
@@ -59,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Event Listener für den Logout-Button in der groups.html
 // Löscht den token aus Local Storage und leitet zurück zur Login-Seite
-document.addEventListener("DOMContentLoaded", function () {
+/* document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("btn-logout");
   if (logoutButton) {
     logoutButton.addEventListener("click", async function (event) {
@@ -73,7 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (response.ok) {
-          alert("Logged out successfully");
           localStorage.removeItem("token");
           window.location.href = "http://localhost:3000";
         } else {
@@ -86,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     console.log("Logout button not found.");
   }
-});
+}); */
 
 // Event Listener der beim Laden der Seite groups.html
 // den User authentisiert, die Gruppen aus der Datenbank abfragt und anzeigt
@@ -144,3 +181,29 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Return button not found.");
   }
 });
+
+//Authentication
+function isAuthenticated() {
+  const token = localStorage.getItem("token");
+  if (token !== null && token !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+function checkAuthenticatedRoute() {
+  if (!isAuthenticated()) {
+    if (window.location.pathname !== "/") {
+      window.location.href = "http://localhost:3000/";
+    }
+  } else {
+    if (window.location.pathname === "/") {
+      window.location.href = "http://localhost:3000/groups";
+    }
+  }
+}
+
+checkAuthenticatedRoute();
+if (isAuthenticated()) {
+  document.getElementById("group-container").style.display = "block";
+}

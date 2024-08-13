@@ -21,9 +21,11 @@ document
 
       const result = await response.json();
       if (response.ok) {
-        alert("Registration successful! Please Login!");
-      } else {
-        alert("Error: " + result.message);
+        localStorage.setItem("token", result.token);
+        window.location.href = "http://localhost:3000/groups";
+      } else if (response.status === 403) {
+        document.getElementById("usernameExistsMessage").style.display =
+          "block";
       }
     } catch (error) {
       alert("An error occurred: " + error.message);
@@ -53,16 +55,35 @@ document
 
       const result = await response.json();
       if (response.ok) {
-        alert("Login successful!");
+        //alert("Login successful!");
         window.location.href = "http://localhost:3000/groups";
         // Store the token in local storage
         localStorage.setItem("token", result.token);
       } else {
-        alert("Error: " + result.message);
       }
     } catch (error) {
       alert("An error occurred: " + error.message);
     }
   });
 
-  
+function isAuthenticated() {
+  const token = localStorage.getItem("token");
+  if (token !== null && token !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+function checkAuthenticatedRoute() {
+  if (!isAuthenticated()) {
+    if (window.location.pathname !== "/") {
+      window.location.href = "http://localhost:3000/";
+    }
+  } else {
+    if (window.location.pathname === "/") {
+      window.location.href = "http://localhost:3000/groups";
+    }
+  }
+}
+
+checkAuthenticatedRoute();

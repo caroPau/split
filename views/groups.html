@@ -14,7 +14,7 @@
     <header>
       <h1>Splitmate</h1>
     </header>
-    <div class="container">
+    <div class="container" id="group-container" style="display: none;">
       <div class="main">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
@@ -23,51 +23,11 @@
             <button type="button" class="btn-add" id="btn_create_group">
               +
             </button>
-         
+          </a>
         </div>
       </div>
-      <button type="button" id="btn-logout">Logout</button>
+      <a href="/logout"><button type="button" id="btn-logout">Logout</button></a>
     </div>
-
-    <script>
-      async function loadGroups() {
-        let token = localStorage.getItem('token');
-
-        const response = await fetch('/api/v1/groups', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        return await response.json();
-      }
-
-      async function displayGroups() {
-        const groups = await loadGroups();
-
-        const groupList = document.getElementById('groupList');
-        groupList.innerHTML = '';
-
-        if (groups.data.groups.length > 0) {
-          groups.data.groups.forEach((group) => {
-            const groupItem = document.createElement('div');
-            groupItem.className = 'group-item';
-            groupItem.innerHTML = `
-              <h2>${group.groupName}</h2>
-              <a href="/groups/${group._id}">Details</a>
-            `;
-            groupList.appendChild(groupItem);
-          });
-        } else {
-          groupList.innerHTML = '<p>No groups found.</p>';
-        }
-      }
-
-      // Call the function to display groups when the page loads
-      displayGroups();
-    </script>
     <script src="./js/groups.js"></script>
   </body>
 </html>
