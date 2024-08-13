@@ -12,16 +12,15 @@
         <h1>Splitmate</h1>
     </header>
     <div class="container">
-        <div class="main">  
-            <input type="checkbox" id="chk" aria-hidden="true">
-
-            <div class="signup">
-                <h1>Successfully logged out.</h1>
-            </div>
-        </div>
+        <p>You have been logged out.</p>
+        <button type="button" id="btn-back-home">Back Home</button>
     </div>
+
     <script>
         localStorage.removeItem('token');
+        document.getElementById('btn-back-home').addEventListener('click', function() {
+            window.location.href = '/';
+        });
     </script>
 </body>
 </html>

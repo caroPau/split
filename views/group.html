@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../css/style.css">
   <title>Group Expenses</title>
 </head>
 <body>
@@ -16,8 +17,16 @@
   <ul id="expensesList">
     <!-- Existing expenses will be listed here -->
   </ul>
+  <div class="actions">
+    <a id="addExpenseLink" href="#"><button type="button" id="btn_add_expense">Add Expense</button></a>
+  </div>
 
   <script>
+    // Extrahiere die Gruppen-ID aus der URL
+    const groupId = window.location.pathname.split('/').pop();
+    const addExpenseLink = document.getElementById('addExpenseLink');
+    addExpenseLink.href = `/groups/${groupId}/expenses`;
+
     document.addEventListener("DOMContentLoaded", async () => {
       // Extrahiere die Gruppen-ID aus der URL
       const groupId = window.location.pathname.split('/').pop();
@@ -42,6 +51,8 @@
         membersBalances.innerHTML = '<h3>Members and Balances</h3>';
         group.membersWithBalances.forEach(memberWithBalance => {
           const memberItem = document.createElement('div');
+          memberItem.classList.add('member-balance');
+          memberItem.dataset.username = memberWithBalance.member.username;
           memberItem.textContent = `${memberWithBalance.member.username}: ${memberWithBalance.balance}`;
           membersBalances.appendChild(memberItem);
         });
@@ -50,16 +61,33 @@
         const socket = new WebSocket(`ws://localhost:8080/group/${groupId}`);
 
         socket.addEventListener('message', function(event) {
-          const expense = JSON.parse(event.data);
-          const expensesList = document.getElementById('expensesList');
-          const listItem = document.createElement('li');
-          listItem.textContent = `${expense.description} - ${expense.amount}`;
-          expensesList.appendChild(listItem);
+          const message = JSON.parse(event.data);
+          console.log("INCOMING: ", JSON.stringify(message));
+
+          if (message.type === 'updateBalances') {
+            const membersBalances = document.getElementById('members-balances');
+            message.balances.forEach(balanceUpdate => {
+              const memberItem = membersBalances.querySelector(`[data-username="${balanceUpdate.username}"]`);
+              if (memberItem) {
+                memberItem.textContent = `${balanceUpdate.username}: ${balanceUpdate.balance}`;
+              }
+            });
+
+            // Neue Expense auflisten
+            const expensesList = document.getElementById('expensesList');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${message.expense.description} - ${message.expense.amount}`;
+            expensesList.appendChild(listItem);
+          }
         });
 
       } catch (error) {
         console.error('Es gab ein Problem mit dem Fetch-Betrieb:', error);
       }
+    });
+
+    document.getElementById('btn_back_group').addEventListener('click', function() {
+      window.location.href = '/groups';
     });
   </script>
 </body>

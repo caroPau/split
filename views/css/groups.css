@@ -68,11 +68,7 @@ button {
 	transition: .2s ease-in;
 	cursor: pointer;
 }
-.btn-add {
-    width: 40px;
-    border-radius: 50%;
-	text-decoration: none;
-}
+
 button:hover {
 	background: #9C1134;
 }

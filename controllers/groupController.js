@@ -19,8 +19,6 @@ exports.createGroup = catchAsync(async (req, res, next) => {
 
   const { groupName, groupMembers } = req.body;
 
-  console.log("Users to add: ", groupMembers);
-
   if (!groupName || !groupMembers) {
     return next(new AppError("Please provide all required fields", 400));
   }
@@ -165,7 +163,6 @@ exports.addNewExpense = async (req, res) => {
   }
 
   const groupId = req.params.id;
-  console.log("BODY: ", req.body);
   const { description, amount } = req.body;
 
   const paidBy = data.id; // Angenommen, der Nutzer ist authentifiziert und req.user enthält die Nutzerdaten
@@ -209,12 +206,26 @@ exports.addNewExpense = async (req, res) => {
     // WebSocket-Benachrichtigung
     const wss = req.app.get("wss");
     if (wss) {
+      const updatedBalances = group.groupMembers.map((member) => ({
+        username: member.username,
+        balance: group.balances.get(member._id.toString()) || 0,
+      }));
+
       wss.clients.forEach((client) => {
         if (
           client.readyState === WebSocket.OPEN &&
           client.groupId === groupId
         ) {
-          client.send(JSON.stringify(expense));
+          client.send(
+            JSON.stringify({
+              type: "updateBalances",
+              balances: updatedBalances,
+              expense: {
+                description: expense.description,
+                amount: expense.amount,
+              },
+            })
+          );
         }
       });
     } else {

@@ -95,6 +95,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document
+  .getElementById("btn_create_group")
+  .addEventListener("click", function () {
+    window.location.href = "./addGroup.html";
+  });
+
+document.getElementById("btn-logout").addEventListener("click", function () {
+  window.location.href = "/logout";
+});
 // Event Listener für den Logout-Button in der groups.html
 // Löscht den token aus Local Storage und leitet zurück zur Login-Seite
 /* document.addEventListener("DOMContentLoaded", function () {
