@@ -1,46 +1,33 @@
-// // Middleware, die vor jeder find-Operation ausgeführt wird, um den Benutzer zu referenzieren
-// expenseSchema.pre(/^find/, function (next) {
-//   // Füge eine Bedingung hinzu, um den Benutzer mit auszuwählen, aber nur den Benutzernamen
-//   this.populate({
-//     path: "user",
-//     select: "username", // Optional: Nur den Benutzernamen des Ausgabenbesitzers anzeigen
-//   });
-//   next();
-// });
-
-// // Erstelle das Expense-Modell basierend auf dem Schema
-// const Expense = mongoose.model("Expense", expenseSchema);
-
-// // Exportiere das Expense-Modell
-// module.exports = Expense;
-
 const mongoose = require("mongoose");
 
+// Definiere das Schema für Ausgaben (Expenses)
 const expenseSchema = new mongoose.Schema({
   description: {
-    type: String,
-    required: [true, "Please provide a description"],
+    type: String, // Beschreibung der Ausgabe
+    required: [true, "Please provide a description"], // Pflichtfeld mit Fehlermeldung bei Fehlen
   },
   amount: {
-    type: Number,
-    required: [true, "Please provide an amount"],
+    type: Number, // Betrag der Ausgabe
+    required: [true, "Please provide an amount"], // Pflichtfeld mit Fehlermeldung bei Fehlen
   },
   group: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Group",
-    required: true,
+    type: mongoose.Schema.Types.ObjectId, // Referenz zur Gruppe, der die Ausgabe zugeordnet ist
+    ref: "Group", // Verweis auf das `Group`-Modell
+    required: true, // Pflichtfeld, da jede Ausgabe einer Gruppe zugeordnet sein muss
   },
   paidBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+    type: mongoose.Schema.Types.ObjectId, // Referenz auf den Benutzer, der die Ausgabe bezahlt hat
+    ref: "User", // Verweis auf das `User`-Modell
+    required: true, // Pflichtfeld, da jede Ausgabe einem Benutzer zugeordnet sein muss
   },
   date: {
-    type: Date,
-    default: Date.now,
+    type: Date, // Datum der Ausgabe
+    default: Date.now, // Standardmäßig wird das aktuelle Datum verwendet
   },
 });
 
+// Erstellt das `Expense`-Modell aus dem Schema
 const Expense = mongoose.model("Expense", expenseSchema);
 
+// Exportiert das `Expense`-Modell zur Verwendung in anderen Teilen der Anwendung
 module.exports = Expense;

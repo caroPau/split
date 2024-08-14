@@ -1,17 +1,7 @@
 // Importiere notwendige Module
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
-const helmet = require("helmet");
-
-// const rateLimit = require("express-rate-limit");
-// const helmet = require("helmet");
-// const mongoSanitize = require("express-mongo-sanitize");
-// const xss = require("xss-clean");
-// const hpp = require("hpp");
-
 const AppError = require("./utils/appError");
-// const globalErrorHandler = require("./controllers/errorController");
 const expenseRouter = require("./routes/expenseRoutes");
 const userRouter = require("./routes/userRoutes");
 const groupRouter = require("./routes/groupRoutes");
@@ -19,129 +9,59 @@ const groupRouter = require("./routes/groupRoutes");
 // Erstelle eine Express-Anwendung
 const app = express();
 
-// Helmet um Sicherheitseinstellungen vornehmen zu können/ Favicon laden zu können
-//app.use(helmet());
+// Statische Dateien bereitstellen
+app.use(express.static(path.join(__dirname, "public"))); // Statische Dateien im "public" Verzeichnis bereitstellen
+app.use(express.static(path.join(__dirname, "views"))); // Statische Dateien im "views" Verzeichnis bereitstellen
+app.use(express.static(path.join(__dirname, "utils", "img"))); // Statische Bilder im "utils/img" Verzeichnis bereitstellen
 
-/* app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    defaultSrc: ["'self'"],
-    imgSrc: ["'self'", "data:"],
-    connectSrc: ["'self'"],
-    scriptSrc: ["'self'"],
-    styleSrc: [
-      "'self'",
-      "https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap",
-    ],
-  })
-); */
-// Root route to serve hello.html
-// Serving static files
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "views")));
-app.use(express.static(path.join(__dirname, "utils", "img")));
-
+// Route für die Startseite
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "hello.html"));
+  res.sendFile(path.join(__dirname, "views", "hello.html")); // Sendet die "hello.html"-Datei bei GET-Anfrage an "/"
 });
 
+// Route für die Gruppenübersicht
 app.get("/groups", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "groups.html"));
+  res.sendFile(path.join(__dirname, "views", "groups.html")); // Sendet die "groups.html"-Datei bei GET-Anfrage an "/groups"
 });
 
+// Route für das Erstellen einer neuen Gruppe
 app.get("/groups/newGroup", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "addGroup.html"));
+  res.sendFile(path.join(__dirname, "views", "addGroup.html")); // Sendet die "addGroup.html"-Datei bei GET-Anfrage an "/groups/newGroup"
 });
 
+// Route für die Gruppendetails
 app.get("/groups/:id", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "group.html"));
+  res.sendFile(path.join(__dirname, "views", "group.html")); // Sendet die "group.html"-Datei bei GET-Anfrage an "/groups/:id"
 });
 
+// Route für die Ausgaben einer Gruppe
 app.get("/groups/:id/expenses", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "expenses.html"));
+  res.sendFile(path.join(__dirname, "views", "expenses.html")); // Sendet die "expenses.html"-Datei bei GET-Anfrage an "/groups/:id/expenses"
 });
 
+// Route für die Abmeldung
 app.get("/logout", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "logout.html"));
+  res.sendFile(path.join(__dirname, "views", "logout.html")); // Sendet die "logout.html"-Datei bei GET-Anfrage an "/logout"
 });
 
-// // GLOBALE MIDDLEWARE
-
-// // Setze Sicherheits-HTTP-Header mit Helmet
-// app.use(helmet());
-
-// // Begrenze die Anzahl der Anfragen von derselben IP
-// const limiter = rateLimit({
-//   max: 100, // Maximal 100 Anfragen
-//   windowMs: 60 * 60 * 1000, // Pro Stunde
-//   message: "Too many requests from this IP, please try again in an hour!", // Fehlermeldung bei Überschreitung
-// });
-// app.use("/api", limiter);
-
-// // Body-Parser, liest JSON-Daten aus dem Anfragekörper
-app.use(express.json({ limit: "10kb" }));
-
-// // Datenbereinigung gegen NoSQL-Injection
-// app.use(mongoSanitize());
-
-// // Datenbereinigung gegen XSS (Cross-Site Scripting)
-// app.use(xss());
-
-// // Verhindere Parameterverunreinigung
-// app.use(
-//   hpp({
-//     whitelist: [
-//       "amount",
-//       "category",
-//       "date",
-//       "description",
-//       "splitWith",
-//       "settled",
-//     ], // Erlaube diese Parameter mehrfach
-//   })
-// );
-
-// // Statische Dateien aus dem public-Verzeichnis bereitstellen
-// app.use(express.static(`${__dirname}/public`));
+// Body-Parser, liest JSON-Daten aus dem Anfragekörper
+app.use(express.json({ limit: "10kb" })); // Beschränkt die Größe der JSON-Nachricht auf 10KB
 
 // Test-Middleware, fügt die Anfragezeit zur Anfrage hinzu
 app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
+  req.requestTime = new Date().toISOString(); // Fügt das aktuelle Datum und die Uhrzeit zur Anfrage hinzu
+  next(); // Übergibt die Anfrage an die nächste Middleware
 });
 
 // ROUTES
-
-// const tours = JSON.parse(fs.readFileSync("./utils/data/groups.json", "utf-8"));
-
-// app.get("/api/v1/tours", (req, res) => {
-//   console.log(req.requestTime);
-//   res.status(200).json({
-//     status: "success",
-//     results: tours.length,
-//     data: {
-//       tours,
-//     },
-//   });
-// });
-
-// app.post("/api/v1/tours", (req, res) => {
-//   console.log(req.body);
-//   res.send("Post klappt auch! 😀");
-// });
-
-// Benutze die Routen für Expenses und Users
-app.use("/api/v1/expenses", expenseRouter);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/groups", groupRouter);
+app.use("/api/v1/expenses", expenseRouter); // Verwendet den expenseRouter für Anfragen an "/api/v1/expenses"
+app.use("/api/v1/users", userRouter); // Verwendet den userRouter für Anfragen an "/api/v1/users"
+app.use("/api/v1/groups", groupRouter); // Verwendet den groupRouter für Anfragen an "/api/v1/groups"
 
 // Fange alle nicht definierten Routen ab und erstelle einen Fehler
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // Erzeugt einen Fehler für nicht gefundene Routen
 });
 
-// // Globale Fehlerbehandlungs-Middleware
-// app.use(globalErrorHandler);
-
 // Exportiere die Express-Anwendung
-module.exports = app;
+module.exports = app; // Exportiert die Express-Anwendung

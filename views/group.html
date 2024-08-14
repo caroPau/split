@@ -1,94 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="../css/style.css">
-  <title>Group Expenses</title>
-</head>
-<body>
-  <h1>Group Expenses</h1>
-  <div class="group-overview" id="group-overview">
-    <!-- Gruppendetails werden hier eingefügt -->
-  </div>
-  <div class="members-balances" id="members-balances">
-    <!-- Mitglieder und ihre Balances werden hier eingefügt -->
-  </div>
-  <ul id="expensesList">
-    <!-- Existing expenses will be listed here -->
-  </ul>
-  <div class="actions">
-    <a id="addExpenseLink" href="#"><button type="button" id="btn_add_expense">Add Expense</button></a>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <title>Group Expenses</title>
+  </head>
+  <body>
+    <header>
+      <a id="backLink" href="/groups.html" class="back-link"
+        ><code>&lt;</code> Zurück</a
+      >
+      <h1>Splitmate</h1>
+    </header>
+    <div class="group-overview" id="group-overview">
+      <!-- Gruppendetails werden hier eingefügt -->
+    </div>
+    <div class="members-balances" id="members-balances">
+      <!-- Mitglieder und ihre Balances werden hier eingefügt -->
+    </div>
+    <ul id="expensesList">
+      <!-- Existing expenses will be listed here -->
+    </ul>
+    <div class="actions">
+      <a id="addExpenseLink" href="#"
+        ><button type="button" id="btn_add_expense">Add Expense</button></a
+      >
+    </div>
 
-  <script>
-    // Extrahiere die Gruppen-ID aus der URL
-    const groupId = window.location.pathname.split('/').pop();
-    const addExpenseLink = document.getElementById('addExpenseLink');
-    addExpenseLink.href = `/groups/${groupId}/expenses`;
-
-    document.addEventListener("DOMContentLoaded", async () => {
+    <script>
       // Extrahiere die Gruppen-ID aus der URL
-      const groupId = window.location.pathname.split('/').pop();
+      const groupId = window.location.pathname.split("/").pop();
+      const addExpenseLink = document.getElementById("addExpenseLink");
+      addExpenseLink.href = `/groups/${groupId}/expenses`;
 
-      // Rufe die Gruppendaten vom Server ab
-      try {
-        const response = await fetch(`/api/v1/groups/${groupId}`);
-        if (!response.ok) {
-          throw new Error('Netzwerkantwort war nicht ok');
-        }
-        const group = await response.json();
-        console.log("GROUP: ", JSON.stringify(group))
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Extrahiere die Gruppen-ID aus der URL
+        const groupId = window.location.pathname.split("/").pop();
 
-        // Rendere die Gruppendaten in der HTML-Seite
-        const groupOverview = document.getElementById('group-overview');
-        groupOverview.innerHTML = `
+        // Rufe die Gruppendaten vom Server ab
+        try {
+          const response = await fetch(`/api/v1/groups/${groupId}`);
+          if (!response.ok) {
+            throw new Error("Netzwerkantwort war nicht ok");
+          }
+          const group = await response.json();
+          console.log("GROUP: ", JSON.stringify(group));
+
+          // Rendere die Gruppendaten in der HTML-Seite
+          const groupOverview = document.getElementById("group-overview");
+          groupOverview.innerHTML = `
           <h2>${group.groupName}</h2>
         `;
 
-        // Rendere die Mitglieder und ihre Balances
-        const membersBalances = document.getElementById('members-balances');
-        membersBalances.innerHTML = '<h3>Members and Balances</h3>';
-        group.membersWithBalances.forEach(memberWithBalance => {
-          const memberItem = document.createElement('div');
-          memberItem.classList.add('member-balance');
-          memberItem.dataset.username = memberWithBalance.member.username;
-          memberItem.textContent = `${memberWithBalance.member.username}: ${memberWithBalance.balance}`;
-          membersBalances.appendChild(memberItem);
+          // Rendere die Mitglieder und ihre Balances
+          const membersBalances = document.getElementById("members-balances");
+          membersBalances.innerHTML = "<h3>Members and Balances</h3>";
+          group.membersWithBalances.forEach((memberWithBalance) => {
+            const memberItem = document.createElement("div");
+            memberItem.classList.add("member-balance");
+            memberItem.dataset.username = memberWithBalance.member.username;
+            memberItem.textContent = `${memberWithBalance.member.username}: ${memberWithBalance.balance}`;
+            membersBalances.appendChild(memberItem);
+          });
+
+          // WebSocket-Verbindung herstellen
+          const socket = new WebSocket(`ws://localhost:8080/group/${groupId}`);
+
+          socket.addEventListener("message", function (event) {
+            const message = JSON.parse(event.data);
+            console.log("INCOMING: ", JSON.stringify(message));
+
+            if (message.type === "updateBalances") {
+              const membersBalances =
+                document.getElementById("members-balances");
+              message.balances.forEach((balanceUpdate) => {
+                const memberItem = membersBalances.querySelector(
+                  `[data-username="${balanceUpdate.username}"]`
+                );
+                if (memberItem) {
+                  memberItem.textContent = `${balanceUpdate.username}: ${balanceUpdate.balance}`;
+                }
+              });
+
+              // Neue Expense auflisten
+              const expensesList = document.getElementById("expensesList");
+              const listItem = document.createElement("li");
+              listItem.textContent = `${message.expense.description} - ${message.expense.amount}`;
+              expensesList.appendChild(listItem);
+            }
+          });
+        } catch (error) {
+          console.error("Es gab ein Problem mit dem Fetch-Betrieb:", error);
+        }
+      });
+
+      document
+        .getElementById("btn_back_group")
+        .addEventListener("click", function () {
+          window.location.href = "/groups";
         });
-
-        // WebSocket-Verbindung herstellen
-        const socket = new WebSocket(`ws://localhost:8080/group/${groupId}`);
-
-        socket.addEventListener('message', function(event) {
-          const message = JSON.parse(event.data);
-          console.log("INCOMING: ", JSON.stringify(message));
-
-          if (message.type === 'updateBalances') {
-            const membersBalances = document.getElementById('members-balances');
-            message.balances.forEach(balanceUpdate => {
-              const memberItem = membersBalances.querySelector(`[data-username="${balanceUpdate.username}"]`);
-              if (memberItem) {
-                memberItem.textContent = `${balanceUpdate.username}: ${balanceUpdate.balance}`;
-              }
-            });
-
-            // Neue Expense auflisten
-            const expensesList = document.getElementById('expensesList');
-            const listItem = document.createElement('li');
-            listItem.textContent = `${message.expense.description} - ${message.expense.amount}`;
-            expensesList.appendChild(listItem);
-          }
-        });
-
-      } catch (error) {
-        console.error('Es gab ein Problem mit dem Fetch-Betrieb:', error);
-      }
-    });
-
-    document.getElementById('btn_back_group').addEventListener('click', function() {
-      window.location.href = '/groups';
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

@@ -4,24 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neue Gruppe erstellen</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
   </head>
   <body>
-    <h1>Neue Gruppe erstellen</h1>
-    <form id="groupForm">
-      <label for="groupName">Gruppenname:</label>
-      <input type="text" id="groupName" name="groupName" required /><br /><br />
-
-      <label for="groupMembers"
-        >Gruppenmitglieder (durch Kommas getrennte Namen):</label
+    <header>
+      <a id="backLink" href="/groups.html" class="back-link"
+        ><code>&lt;</code> Zurück</a
       >
-      <input type="text" id="groupMembers" name="groupMembers" /><br /><br />
+      <h1 id="headerTitle">Splitmate</h1>
+    </header>
+    <div class="container">
+      <div class="main">
+        <label>Create Group</label>
+        <form id="groupForm">
+          <label class="newGroupLabel" for="groupName">Gruppenname:</label>
+          <input
+            type="text"
+            id="groupName"
+            name="groupName"
+            required
+          /><br /><br />
 
-      <button type="submit">Gruppe erstellen</button>
-      <button type="button" id="btn-back">Zurück</button>
-    </form>
+          <label class="newGroupLabel" for="groupMembers"
+            >Gruppenmitglieder</label
+          >
+          <h5>durch Kommas getrennte Namen</h5>
+          <input
+            type="text"
+            id="groupMembers"
+            name="groupMembers"
+          /><br /><br />
 
-    <p id="responseMessage"></p>
+          <button type="submit">Gruppe erstellen</button>
+          <button type="button" id="btn-back">Zurück</button>
+        </form>
+
+        <p id="responseMessage"></p>
+      </div>
+    </div>
 
     <script src="./js/groups.js"></script>
   </body>

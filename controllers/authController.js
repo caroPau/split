@@ -1,38 +1,43 @@
 // Importiere notwendige Module und Modelle
-const User = require("../models/userModel");
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
-const jwt = require("jsonwebtoken");
+const User = require("../models/userModel"); // User-Modell für den Zugriff auf die Benutzerdatenbank
+const AppError = require("../utils/appError"); // AppError-Klasse für Fehlerbehandlung
+const catchAsync = require("../utils/catchAsync"); // catchAsync für Fehlerbehandlung bei asynchronen Funktionen
+const jwt = require("jsonwebtoken"); // jsonwebtoken für das Erstellen und Verifizieren von JWTs (JSON Web Tokens)
 
-// // Login-Funktion
+// Login-Funktion
 exports.login = catchAsync(async (req, res, next) => {
+  // Extrahiere Benutzername und Passwort aus dem Anfragetext
   const { username, password } = req.body;
-  console.log("Username: ", username);
+  console.log("Username: ", username); // Debugging-Ausgabe des Benutzernamens
 
-  // Find the user by username
+  // Finde den Benutzer in der Datenbank anhand des Benutzernamens
   const user = await User.findOne({ username });
 
-  // Check if user exists
+  // Überprüfe, ob der Benutzer existiert
   if (!user) {
+    // Wenn der Benutzer nicht existiert, sende eine Fehlermeldung zurück
     return res.status(400).json({
       status: "error",
       message: "User does not exist. Cannot login with that username.",
     });
   }
-  console.log("Password: " + user.password);
+  console.log("Password: " + user.password); // Debugging-Ausgabe des gehashten Passworts des Benutzers
 
+  // Überprüfe, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
   user
-    .correctPassword(password, user.password)
+    .correctPassword(password, user.password) // Verwendet eine Methode des User-Modells zum Vergleich der Passwörter
     .then((isMatch) => {
       if (isMatch) {
-        console.log("Passwords match");
+        console.log("Passwords match"); // Debugging-Ausgabe, wenn die Passwörter übereinstimmen
 
         // JWT Token erstellen und senden
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit
+          expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit wird aus Umgebungsvariablen genommen
         });
-        // Set the token in the response headers
+
+        // Setze das Token in den Antwort-Headern
         res.setHeader("Authorization", `Bearer ${token}`);
+        // Sende die Antwort mit dem Token und den Benutzerdaten
         res.status(200).json({
           status: "success",
           token,
@@ -41,7 +46,8 @@ exports.login = catchAsync(async (req, res, next) => {
           },
         });
       } else {
-        console.log("Passwords do not match");
+        console.log("Passwords do not match"); // Debugging-Ausgabe, wenn die Passwörter nicht übereinstimmen
+        // Wenn die Passwörter nicht übereinstimmen, sende eine Fehlermeldung zurück
         return res.status(400).json({
           status: "error",
           message: "Invalid password. Cannot login with that password.",
@@ -49,40 +55,13 @@ exports.login = catchAsync(async (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err); // Fehlerbehandlung und Ausgabe von Fehlern, die während der Passwortüberprüfung auftreten
     });
 });
 
+// Logout-Funktion
 exports.logout = (req, res) => {
   res.status(200).json({
-    status: 'success',
+    status: "success",
   });
-}
-// exports.login = catchAsync(async (req, res, next) => {
-//   // Extrahiere Login-Daten aus dem Anfragekörper
-//   const { login_name, login_password } = req.body;
-
-//   // Überprüfen, ob die Login-Daten vorhanden sind
-//   if (!login_name || !login_password) {
-//     return next(new AppError("Please provide username and password!", 400)); // Fehler, wenn Daten fehlen
-//   }
-
-//   // Benutzer in der Datenbank finden und Passwort überprüfen
-//   const user = await User.findOne({ username: login_name }).select("+password");
-
-//   // Überprüfen, ob Benutzer existiert und Passwort korrekt ist
-//   if (!user || !(await user.correctPassword(login_password, user.password))) {
-//     return next(new AppError("Incorrect username or password", 401)); // Fehler bei falschen Anmeldedaten
-//   }
-
-//   // JWT Token erstellen und senden
-//   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//     expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit
-//   });
-
-//   // Erfolgsantwort mit JWT Token
-//   res.status(200).json({
-//     status: "success",
-//     token,
-//   });
-// });
+};

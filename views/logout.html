@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Splitmate</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <header>
-        <h1>Splitmate</h1>
+      <h1>Splitmate</h1>
     </header>
     <div class="container">
-        <p>You have been logged out.</p>
-        <button type="button" id="btn-back-home">Back Home</button>
+      <p>You have been logged out.</p>
+      <button type="button" id="btn-back-home">Back Home</button>
     </div>
 
     <script>
-        localStorage.removeItem('token');
-        document.getElementById('btn-back-home').addEventListener('click', function() {
-            window.location.href = '/';
+      localStorage.removeItem("token");
+      document
+        .getElementById("btn-back-home")
+        .addEventListener("click", function () {
+          window.location.href = "/";
         });
     </script>
-</body>
+  </body>
 </html>

@@ -1,4 +1,3 @@
-// const crypto = require("crypto"); // Node.js Modul für Kryptooperationen
 const mongoose = require("mongoose"); // Mongoose für MongoDB-Operationen
 const bcrypt = require("bcryptjs"); // Bcrypt für das Hashen von Passwörtern
 

@@ -13,8 +13,12 @@ h1 {
 	color: #e66b8a;
 	position: absolute; 
 	top: 20px; 
-	left: 20px; 
+	right: 20px; 
 	margin: 0;
+}
+h5{
+	color: white;
+	text-align: center;
 }
 .main{
 	width: 350px;
@@ -53,6 +57,14 @@ label{
 .group-overview, .members-balances {
 	margin-bottom: 20px;
 }
+.back-link {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	text-decoration: none;
+	color: #e66b8a;
+	font-size: 16px;
+  }
 input{
 	width: 60%;
 	height: 10px;
@@ -99,9 +111,10 @@ button:hover{
 	flex-direction: column;
 	align-items: center;
 }
-.group-item h2 {
+.group-item h2, .newGroupLabel {
 	margin: 0;
 	color: #7A0D28;
+	font-size: 1.5em;
 }
 .group-item p {
 	margin: 5px 0;

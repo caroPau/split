@@ -1,3 +1,4 @@
+// Lädt die Gruppen vom Server
 async function loadGroups() {
   console.log("hello 1");
   let token = localStorage.getItem("token");
@@ -13,6 +14,7 @@ async function loadGroups() {
   return await response.json();
 }
 
+// Zeigt die geladenen Gruppen auf der Seite an
 async function displayGroups() {
   const groups = await loadGroups();
 
@@ -36,12 +38,7 @@ async function displayGroups() {
 
 displayGroups();
 
-//
-//  Event Listener für die Seiten groups.html und addGroup.html
-//
-
-//Event Listener für das Formular zum Erstellen einer Gruppe in der addGroup.html
-// liest das Formular aus, authentifiziert den User und sendet die Daten zum erstellen an den Server
+// Event Listener für das Formular zur Erstellung einer Gruppe in addGroup.html
 document.addEventListener("DOMContentLoaded", function () {
   const groupForm = document.getElementById("groupForm");
 
@@ -57,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let token = localStorage.getItem("token");
 
+      // Überprüft die Benutzer im Formular
       const userValidationResponse = await fetch("/api/v1/groups/validate", {
         method: "POST",
         headers: {
@@ -73,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "Ein oder mehrere Benutzer sind ungültig.";
         return;
       }
+      // Sendet die Daten zur Erstellung der Gruppe
       const response = await fetch("/api/v1/groups/newGroup/create", {
         method: "POST",
         headers: {
@@ -88,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("responseMessage").innerText =
           "Gruppe erfolgreich erstellt!";
       } else {
+        // Optionale Fehlerbehandlung
       }
     });
   } else {
@@ -95,47 +95,19 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Event Listener für den Button zum Erstellen einer neuen Gruppe
 document
   .getElementById("btn_create_group")
   .addEventListener("click", function () {
     window.location.href = "./addGroup.html";
   });
 
+// Event Listener für den Logout-Button
 document.getElementById("btn-logout").addEventListener("click", function () {
   window.location.href = "/logout";
 });
-// Event Listener für den Logout-Button in der groups.html
-// Löscht den token aus Local Storage und leitet zurück zur Login-Seite
-/* document.addEventListener("DOMContentLoaded", function () {
-  const logoutButton = document.getElementById("btn-logout");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async function (event) {
-      event.preventDefault();
-      try {
-        const response = await fetch("/api/v1/users/logout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
 
-        if (response.ok) {
-          localStorage.removeItem("token");
-          window.location.href = "http://localhost:3000";
-        } else {
-          alert("Error logging out");
-        }
-      } catch (error) {
-        alert("An error occured: " + error.message);
-      }
-    });
-  } else {
-    console.log("Logout button not found.");
-  }
-}); */
-
-// Event Listener der beim Laden der Seite groups.html
-// den User authentisiert, die Gruppen aus der Datenbank abfragt und anzeigt
+// Lädt die Gruppen des Benutzers beim Laden der Seite
 window.addEventListener("load", async () => {
   let token = localStorage.getItem("token");
 
@@ -177,7 +149,7 @@ window.addEventListener("load", async () => {
   }
 });
 
-// Event Listener für den Zurück-Button in der addGroup.html
+// Event Listener für den Zurück-Button in addGroup.html
 document.addEventListener("DOMContentLoaded", function () {
   const returnButton = document.getElementById("btn-back");
 
@@ -191,13 +163,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-//Authentication
+// Überprüft die Authentifizierung und leitet je nach Status weiter
 function isAuthenticated() {
   const token = localStorage.getItem("token");
-  if (token !== null && token !== undefined) {
-    return true;
-  }
-  return false;
+  return token !== null && token !== undefined;
 }
 
 function checkAuthenticatedRoute() {
