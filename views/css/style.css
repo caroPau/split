@@ -18,7 +18,8 @@ h1 {
 }
 h5{
 	color: white;
-	text-align: center;
+  	text-align: center;
+	margin: 0;
 }
 .main{
 	width: 350px;
@@ -26,6 +27,15 @@ h5{
 	overflow: hidden;
 	border-radius: 10px;
 	box-shadow: 5px 20px 50px #000;
+}
+.mainGroup{
+	width: 350px;
+    max-width: 90%;
+    height: auto;
+    padding: 20px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px #000;
 }
 
 #chk{
@@ -56,7 +66,14 @@ label{
 }
 .group-overview, .members-balances {
 	margin-bottom: 20px;
+	margin: auto;
+	
 }
+.form-group {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+  }
 .back-link {
 	position: absolute;
 	top: 20px;
@@ -111,9 +128,14 @@ button:hover{
 	flex-direction: column;
 	align-items: center;
 }
-.group-item h2, .newGroupLabel {
+.group-item h2 {
 	margin: 0;
 	color: #7A0D28;
+	font-size: 1.5em;
+}
+.newGroupLabel {
+	margin-bottom: 5px;
+	color: #E66B8A;
 	font-size: 1.5em;
 }
 .group-item p {

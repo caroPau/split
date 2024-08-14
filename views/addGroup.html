@@ -3,47 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neue Gruppe erstellen</title>
+    <title>Splitmate - Create Group</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header>
       <a id="backLink" href="/groups.html" class="back-link"
-        ><code>&lt;</code> Zurück</a
+        ><code>&lt;</code> Back</a
       >
       <h1 id="headerTitle">Splitmate</h1>
     </header>
     <div class="container">
-      <div class="main">
+      <div class="mainGroup">
         <label>Create Group</label>
         <form id="groupForm">
-          <label class="newGroupLabel" for="groupName">Gruppenname:</label>
-          <input
-            type="text"
-            id="groupName"
-            name="groupName"
-            required
-          /><br /><br />
+          <label class="newGroupLabel" for="groupName">Group Name</label>
+          <input type="text" id="groupName" name="groupName" required />
 
-          <label class="newGroupLabel" for="groupMembers"
-            >Gruppenmitglieder</label
-          >
-          <h5>durch Kommas getrennte Namen</h5>
-          <input
-            type="text"
-            id="groupMembers"
-            name="groupMembers"
-          /><br /><br />
+          <label class="newGroupLabel" for="groupMembers">Group Members</label>
+          <h5>seperated by comma</h5>
+          <input type="text" id="groupMembers" name="groupMembers" />
 
-          <button type="submit">Gruppe erstellen</button>
-          <button type="button" id="btn-back">Zurück</button>
+          <button type="submit">Create group</button>
         </form>
 
         <p id="responseMessage"></p>
       </div>
     </div>
-
-    <script src="./js/groups.js"></script>
+    <script src="./js/addGroup.js"></script>
   </body>
 </html>

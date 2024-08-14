@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Splitmate - Gruppenübersicht</title>
-    <link rel="icon" type="image/png" src="utils/img/favicon.png"/>
+    <title>Splitmate - Groups</title>
+    <link rel="icon" type="image/png" src="utils/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
     />
-   <!-- <link rel="icon" type="image/png" href="/logo.png" /> -->
+    <!-- <link rel="icon" type="image/png" href="/logo.png" /> -->
   </head>
   <body>
     <header>
       <h1>Splitmate</h1>
     </header>
-    <div class="container" id="group-container" style="display: none;">
-      <div class="main">
+    <div class="container" id="group-container">
+      <div class="mainGroup">
         <div class="group-overview">
           <label for="chk" aria-hidden="true">My Groups</label>
           <div class="group-list" id="group-list"></div>
-          <button type="button" class="btn-add" id="btn_create_group">
-            +
-        </button>
-          </a>
+          <button type="button" class="btn-add" id="btn_create_group">+</button>
         </div>
       </div>
-      <button type="button" id="btn-logout">Logout</button>    </div>
+      <button type="button" id="btn-logout">Logout</button>
+    </div>
     <script src="./js/groups.js"></script>
+    <script>
+      // Event Listener für den Logout-Button
+      document
+        .getElementById("btn-logout")
+        .addEventListener("click", function () {
+          window.location.href = "/logout";
+        });
+
+      // Event Listener für den Button zum Erstellen einer neuen Gruppe
+      document
+        .getElementById("btn_create_group")
+        .addEventListener("click", function () {
+          window.location.href = "./addGroup.html";
+        });
+    </script>
   </body>
 </html>

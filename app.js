@@ -1,7 +1,6 @@
 // Importiere notwendige Module
 const express = require("express");
 const path = require("path");
-const AppError = require("./utils/appError");
 const expenseRouter = require("./routes/expenseRoutes");
 const userRouter = require("./routes/userRoutes");
 const groupRouter = require("./routes/groupRoutes");
@@ -60,7 +59,10 @@ app.use("/api/v1/groups", groupRouter); // Verwendet den groupRouter für Anfrag
 
 // Fange alle nicht definierten Routen ab und erstelle einen Fehler
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // Erzeugt einen Fehler für nicht gefundene Routen
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server!`,
+  });
 });
 
 // Exportiere die Express-Anwendung

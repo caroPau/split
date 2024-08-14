@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
-    <title>Group Expenses</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <title>Splitmate - Group Overview</title>
   </head>
   <body>
     <header>
@@ -13,19 +17,23 @@
       >
       <h1>Splitmate</h1>
     </header>
-    <div class="group-overview" id="group-overview">
-      <!-- Gruppendetails werden hier eingefügt -->
-    </div>
-    <div class="members-balances" id="members-balances">
-      <!-- Mitglieder und ihre Balances werden hier eingefügt -->
-    </div>
-    <ul id="expensesList">
-      <!-- Existing expenses will be listed here -->
-    </ul>
-    <div class="actions">
-      <a id="addExpenseLink" href="#"
-        ><button type="button" id="btn_add_expense">Add Expense</button></a
-      >
+    <div class="container">
+      <div class="mainGroup">
+        <div class="group-overview" id="group-overview">
+          <!-- Gruppendetails werden hier eingefügt -->
+        </div>
+        <div class="members-balances" id="members-balances">
+          <!-- Mitglieder und ihre Balances werden hier eingefügt -->
+        </div>
+        <ul id="expensesList">
+          <!-- Existing expenses will be listed here -->
+        </ul>
+        <div class="actions">
+          <a id="addExpenseLink" href="#"
+            ><button type="button" id="btn_add_expense">Add Expense</button></a
+          >
+        </div>
+      </div>
     </div>
 
     <script>
@@ -45,22 +53,24 @@
             throw new Error("Netzwerkantwort war nicht ok");
           }
           const group = await response.json();
-          console.log("GROUP: ", JSON.stringify(group));
 
           // Rendere die Gruppendaten in der HTML-Seite
           const groupOverview = document.getElementById("group-overview");
           groupOverview.innerHTML = `
-          <h2>${group.groupName}</h2>
+          <label>${group.groupName}</label>
         `;
 
           // Rendere die Mitglieder und ihre Balances
           const membersBalances = document.getElementById("members-balances");
-          membersBalances.innerHTML = "<h3>Members and Balances</h3>";
+          membersBalances.innerHTML =
+            '<label class="newGroupLabel">Members and Balances</label>';
           group.membersWithBalances.forEach((memberWithBalance) => {
-            const memberItem = document.createElement("div");
+            const memberItem = document.createElement("h2");
             memberItem.classList.add("member-balance");
             memberItem.dataset.username = memberWithBalance.member.username;
-            memberItem.textContent = `${memberWithBalance.member.username}: ${memberWithBalance.balance}`;
+            memberItem.textContent = `${
+              memberWithBalance.member.username
+            }: ${memberWithBalance.balance.toFixed(2)} €`;
             membersBalances.appendChild(memberItem);
           });
 
@@ -69,8 +79,6 @@
 
           socket.addEventListener("message", function (event) {
             const message = JSON.parse(event.data);
-            console.log("INCOMING: ", JSON.stringify(message));
-
             if (message.type === "updateBalances") {
               const membersBalances =
                 document.getElementById("members-balances");
@@ -79,14 +87,18 @@
                   `[data-username="${balanceUpdate.username}"]`
                 );
                 if (memberItem) {
-                  memberItem.textContent = `${balanceUpdate.username}: ${balanceUpdate.balance}`;
+                  memberItem.textContent = `${
+                    balanceUpdate.username
+                  }: ${balanceUpdate.balance.toFixed(2)}`;
                 }
               });
 
               // Neue Expense auflisten
               const expensesList = document.getElementById("expensesList");
               const listItem = document.createElement("li");
-              listItem.textContent = `${message.expense.description} - ${message.expense.amount}`;
+              listItem.textContent = `${
+                message.expense.description
+              } - ${message.expense.amount.toFixed(2)}`;
               expensesList.appendChild(listItem);
             }
           });

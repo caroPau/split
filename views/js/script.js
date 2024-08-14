@@ -4,7 +4,6 @@ document
   .addEventListener("submit", async function (event) {
     event.preventDefault(); // Verhindert das automatische Absenden des Formulars
     const formData = new FormData(this); // Holt die Formulardaten
-    console.log(formData + "," + formData.get("username")); // Debugging-Ausgabe
     const data = {
       username: formData.get("username"),
       password: formData.get("password"),
@@ -38,7 +37,6 @@ document
   .addEventListener("submit", async function (event) {
     event.preventDefault(); // Verhindert das automatische Absenden des Formulars
     const formData = new FormData(this); // Holt die Formulardaten
-    console.log(formData + "," + formData.get("username")); // Debugging-Ausgabe
     const data = {
       username: formData.get("username"),
       password: formData.get("password"),

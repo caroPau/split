@@ -4,26 +4,27 @@ const WebSocket = require("ws"); // WebSocket für Echtzeitkommunikation
 const Group = require("./../models/groupModel"); // Group-Modell für Gruppendaten
 const User = require("../models/userModel"); // User-Modell für Benutzerdaten
 const Expense = require("../models/expenseModel"); // Expense-Modell für Ausgaben
-const catchAsync = require("./../utils/catchAsync"); // catchAsync für Fehlerbehandlung bei asynchronen Funktionen
-const AppError = require("./../utils/appError"); // AppError-Klasse für Fehlerbehandlung
-const jwt = require("jsonwebtoken"); // JSON Web Token für Authentifizierung
 const { validateToken } = require("./../utils/auth/jwtAuthenticator"); // Token-Validierung
 
 // Funktion zum Erstellen einer neuen Gruppe
-exports.createGroup = catchAsync(async (req, res, next) => {
+exports.createGroup = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1]; // Extrahiere das JWT aus dem Authorization-Header
   let { success, data } = validateToken(token); // Überprüfe das Token
 
-  console.log("Success: ", success); // Debugging-Ausgabe
-
   if (!success) {
-    return next(new AppError("Unauthorized", 401)); // Wenn Token ungültig, Fehler zurückgeben
+    return res.status(401).json({
+      status: "fail",
+      message: "Unauthorized",
+    });
   }
 
   const { groupName, groupMembers } = req.body; // Extrahiere Gruppenname und Mitglieder aus dem Anfragetext
 
   if (!groupName || !groupMembers) {
-    return next(new AppError("Please provide all required fields", 400)); // Fehlermeldung bei fehlenden Feldern
+    return res.status(400).json({
+      status: "fail",
+      message: "Please provide all required fields",
+    });
   }
 
   const newGroup = await Group.create({
@@ -54,54 +55,55 @@ exports.createGroup = catchAsync(async (req, res, next) => {
       group: newGroup, // Sende die neu erstellte Gruppe als Antwort zurück
     },
   });
-});
+};
 
 // Funktion zum Abrufen der Gruppen eines Benutzers
-exports.getGroups = catchAsync(async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1]; // Extrahiere das JWT aus dem Authorization-Header
-  let { success, data } = validateToken(token); // Überprüfe das Token
+exports.getGroups = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1]; // Extrahiere das JWT aus dem Authorization-Header
+    let { success, data } = validateToken(token); // Überprüfe das Token
 
-  if (!success) {
-    return next(new AppError("Unauthorized", 401)); // Wenn Token ungültig, Fehler zurückgeben
-  }
+    const userId = new mongoose.Types.ObjectId(data.id); // Konvertiere die ID in ein Mongoose-Objekt
+    const user = await User.findById(userId)
+      .populate("groups") // Populiere die Gruppen des Benutzers
+      .populate({
+        path: "groupMembers",
+        select: "username", // Nur den Benutzernamen der Gruppenmitglieder zurückgeben
+        options: { strictPopulate: false },
+      });
 
-  const userId = new mongoose.Types.ObjectId(data.id); // Konvertiere die ID in ein Mongoose-Objekt
-  const user = await User.findById(userId)
-    .populate("groups") // Populiere die Gruppen des Benutzers
-    .populate({
-      path: "groupMembers",
-      select: "username", // Nur den Benutzernamen der Gruppenmitglieder zurückgeben
-      options: { strictPopulate: false },
+    // Formatieren der Gruppen mit den Mitgliedern und ihren Benutzernamen
+    const formattedGroups = await Promise.all(
+      user.groups.map(async (group) => {
+        const groupMembers = await Promise.all(
+          group.groupMembers.map(async (member) => {
+            const user = await User.findById(member); // Finde jedes Gruppenmitglied
+            return {
+              _id: user._id,
+              username: user.username, // Gebe die Benutzer-ID und den Benutzernamen zurück
+            };
+          })
+        );
+        return {
+          id: group._id,
+          groupName: group.groupName,
+          groupMembers, // Füge die formatierten Gruppenmitglieder hinzu
+        };
+      })
+    );
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        username: user.username, // Gebe den Benutzernamen und die formatierten Gruppen zurück
+        groups: formattedGroups,
+      },
     });
-
-  // Formatieren der Gruppen mit den Mitgliedern und ihren Benutzernamen
-  const formattedGroups = await Promise.all(
-    user.groups.map(async (group) => {
-      const groupMembers = await Promise.all(
-        group.groupMembers.map(async (member) => {
-          const user = await User.findById(member); // Finde jedes Gruppenmitglied
-          return {
-            _id: user._id,
-            username: user.username, // Gebe die Benutzer-ID und den Benutzernamen zurück
-          };
-        })
-      );
-      return {
-        id: group._id,
-        groupName: group.groupName,
-        groupMembers, // Füge die formatierten Gruppenmitglieder hinzu
-      };
-    })
-  );
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      username: user.username, // Gebe den Benutzernamen und die formatierten Gruppen zurück
-      groups: formattedGroups,
-    },
-  });
-});
+  } catch (error) {
+    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
+    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
+  }
+};
 
 // Funktion zur Validierung von Benutzern
 exports.validateUsers = async (req, res, next) => {
@@ -121,6 +123,7 @@ exports.validateUsers = async (req, res, next) => {
       status: "fail",
       allUsersValid: false,
       message: "Ein oder mehrere Member sind ungültig.", // Fehlermeldung bei ungültigen Benutzern
+      invalidUsers,
     });
   }
 
@@ -167,7 +170,11 @@ exports.addNewExpense = async (req, res) => {
   let { success, data } = validateToken(token); // Überprüfe das Token
 
   if (!success) {
-    return next(new AppError("Unauthorized", 401)); // Wenn Token ungültig, Fehler zurückgeben
+    // Wenn Token ungültig, Fehler zurückgeben
+    return res.status(401).json({
+      status: "fail",
+      message: "Unauthorized",
+    });
   }
 
   const groupId = req.params.id; // Extrahiere die Gruppen-ID aus den Anfrageparametern
