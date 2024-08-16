@@ -53,7 +53,6 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.use("/api/v1/expenses", expenseRouter); // Verwendet den expenseRouter für Anfragen an "/api/v1/expenses"
 app.use("/api/v1/users", userRouter); // Verwendet den userRouter für Anfragen an "/api/v1/users"
 app.use("/api/v1/groups", groupRouter); // Verwendet den groupRouter für Anfragen an "/api/v1/groups"
 

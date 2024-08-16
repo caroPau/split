@@ -54,50 +54,6 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// Controller zum Abrufen der Gruppen eines Benutzers
-exports.getMyGroups = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1]; // Extrahiere das Token aus dem Authorization-Header
-
-    if (!token) {
-      return res.status(401).json({
-        status: "fail",
-        message: "No token provided", // Fehlermeldung, wenn kein Token bereitgestellt wurde
-      });
-    }
-
-    const result = validateToken(token); // Token validieren
-
-    if (!result.success) {
-      return res.status(401).json({
-        status: "fail",
-        message: "Invalid token.", // Fehlermeldung bei ungültigem Token
-      });
-    }
-
-    const userId = result.data.id; // Extrahiere die Benutzer-ID aus dem validierten Token
-
-    const user = await User.findById(userId).populate("groups"); // Finde den Benutzer und populiere seine Gruppen
-
-    if (!user) {
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found", // Fehlermeldung, wenn der Benutzer nicht gefunden wird
-      });
-    }
-
-    res.status(200).json({
-      status: "success",
-      data: {
-        groups: user.groups, // Gebe die Gruppen des Benutzers in der Antwort zurück
-      },
-    });
-  } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
-    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
-  }
-};
-
 // Platzhalter für einen Controller zum Löschen eines Benutzers (noch nicht implementiert)
 exports.deleteUser = (req, res) => {
   res.status(500).json({

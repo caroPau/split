@@ -9,10 +9,4 @@ router.post("/register", userController.register);
 // Benutzer-Login
 router.post("/login", authController.login);
 
-// Benutzer-Logout
-router.post("/logout", authController.logout);
-
-// Abrufen der Gruppen des Benutzers
-router.get("/myGroups", userController.getMyGroups);
-
 module.exports = router;

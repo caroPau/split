@@ -5,12 +5,12 @@ const http = require("http");
 const WebSocket = require("ws");
 
 // Lade Umgebungsvariablen aus der config.env Datei
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 // Importiere die Express-App aus der app.js
 const app = require("./app");
 
 // Ersetze das Platzhalter-Passwort in der Datenbank-URL mit dem tatsächlichen Passwort aus den Umgebungsvariablen
-const DB = "mongodb://127.0.0.1:27017/splitmate";
+const DB = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/splitmate";
 
 // Verbinde mit der MongoDB-Datenbank
 mongoose.connect(DB, {}).then(() => console.log("DB connection successful!")); // Logge eine Erfolgsmeldung bei erfolgreicher Verbindung

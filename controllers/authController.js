@@ -55,10 +55,3 @@ exports.login = async (req, res, next) => {
     res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
   }
 };
-
-// Logout-Funktion
-exports.logout = (req, res) => {
-  res.status(200).json({
-    status: "success",
-  });
-};
