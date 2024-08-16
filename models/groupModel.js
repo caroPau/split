@@ -6,6 +6,7 @@ const groupSchema = new mongoose.Schema({
   groupName: {
     type: String, // Name der Gruppe
     required: [true, "Please provide a groupname"], // Pflichtfeld mit Fehlermeldung bei Fehlen
+    unique: false,
   },
   groupMembers: [
     {
