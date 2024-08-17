@@ -1,7 +1,6 @@
 // Importiere notwendige Module
 const express = require("express");
 const path = require("path");
-const expenseRouter = require("./routes/expenseRoutes");
 const userRouter = require("./routes/userRoutes");
 const groupRouter = require("./routes/groupRoutes");
 

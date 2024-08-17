@@ -9,4 +9,7 @@ router.post("/register", userController.register);
 // Benutzer-Login
 router.post("/login", authController.login);
 
+// Abrufen der Gruppen des Benutzers
+router.get("/myGroups", userController.getMyGroups);
+
 module.exports = router;
