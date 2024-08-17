@@ -100,8 +100,8 @@ exports.getGroups = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
-    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
+    console.log("ERROR: ", error);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -190,10 +190,10 @@ exports.addNewExpense = async (req, res) => {
     }
 
     const expense = new Expense({
-      description, // Beschreibung der Ausgabe
-      amount, // Betrag der Ausgabe
-      group: groupId, // Zugehörige Gruppen-ID
-      paidBy, // Bezahlt von
+      description,
+      amount,
+      group: groupId,
+      paidBy,
     });
 
     await expense.save(); // Speichere die Ausgabe
@@ -233,23 +233,23 @@ exports.addNewExpense = async (req, res) => {
         ) {
           client.send(
             JSON.stringify({
-              type: "updateBalances", // Nachrichtentyp "updateBalances"
-              balances: updatedBalances, // Aktualisierte Guthaben
+              type: "updateBalances",
+              balances: updatedBalances,
               expense: {
-                description: expense.description, // Beschreibung der Ausgabe
-                amount: expense.amount, // Betrag der Ausgabe
+                description: expense.description,
+                amount: expense.amount,
               },
             })
           );
         }
       });
     } else {
-      console.log("WebSocket server not initialized"); // Fehlerbehandlung, wenn der WebSocket-Server nicht initialisiert ist
+      console.log("WebSocket server not initialized");
     }
 
     res.status(201).json(expense); // Sende die Ausgabe als Antwort zurück
   } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
-    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
+    console.log("ERROR: ", error);
+    res.status(500).send("Server Error");
   }
 };

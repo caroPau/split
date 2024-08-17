@@ -27,7 +27,7 @@ document
           "block"; // Zeigt Fehlermeldung bei bereits bestehendem Benutzernamen an
       }
     } catch (error) {
-      alert("An error occurred: " + error.message); // Fehlerbehandlung
+      alert("An error occurred: " + error.message);
     }
   });
 
@@ -35,7 +35,7 @@ document
 document
   .getElementById("loginForm")
   .addEventListener("submit", async function (event) {
-    event.preventDefault(); // Verhindert das automatische Absenden des Formulars
+    event.preventDefault();
     const formData = new FormData(this); // Holt die Formulardaten
     const data = {
       username: formData.get("username"),
@@ -53,14 +53,11 @@ document
 
       const result = await response.json();
       if (response.ok) {
-        //alert("Login successful!"); // Optionales Alert
         window.location.href = "http://localhost:3000/groups"; // Weiterleitung bei Erfolg
         localStorage.setItem("token", result.token); // Speichert das Token im Local Storage
-      } else {
-        // Optionale Fehlerbehandlung
       }
     } catch (error) {
-      alert("An error occurred: " + error.message); // Fehlerbehandlung
+      alert("An error occurred: " + error.message);
     }
   });
 

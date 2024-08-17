@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 });
 
-// // Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen
+// Middleware, die vor dem Speichern eines Dokuments ausgeführt wird, um das Passwort zu hashen
 userSchema.pre("save", async function (next) {
   // Hash das Passwort mit Bcrypt
   if (!this.isModified("password")) return next();
@@ -26,8 +26,8 @@ userSchema.pre("save", async function (next) {
 
 // Instanzmethode, um das Passwort des Benutzers zu überprüfen
 userSchema.methods.correctPassword = async function (
-  candidatePassword, // Das vom Benutzer eingegebene Passwort
-  userPassword // Das in der Datenbank gespeicherte Passwort
+  candidatePassword,
+  userPassword
 ) {
   // Vergleiche das eingegebene Passwort mit dem gespeicherten Passwort
   return await bcrypt.compare(candidatePassword, userPassword);

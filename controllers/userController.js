@@ -28,14 +28,14 @@ exports.register = async (req, res, next) => {
     // Neuen Benutzer erstellen
     const newUser = await User.create({
       username,
-      password, // Speichern von Benutzername und Passwort im neuen Benutzerobjekt
+      password,
     });
 
     newUser.save(); // Speichern des neuen Benutzers in der Datenbank
 
     // JWT-Token für den neuen Benutzer erstellen
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN, // Token Ablaufzeit aus den Umgebungsvariablen
+      expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
     // Setze das Token in den Antwortheader
@@ -49,8 +49,8 @@ exports.register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
-    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
+    console.log("ERROR: ", error);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -71,7 +71,7 @@ exports.getMyGroups = async (req, res, next) => {
     if (!result.success) {
       return res.status(401).json({
         status: "fail",
-        message: "Invalid token.", // Fehlermeldung bei ungültigem Token
+        message: "Invalid token.",
       });
     }
 
@@ -82,7 +82,7 @@ exports.getMyGroups = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({
         status: "fail",
-        message: "User not found", // Fehlermeldung, wenn der Benutzer nicht gefunden wird
+        message: "User not found",
       });
     }
 
@@ -93,8 +93,8 @@ exports.getMyGroups = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
-    res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
+    console.log("ERROR: ", error);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -102,6 +102,6 @@ exports.getMyGroups = async (req, res, next) => {
 exports.deleteUser = (req, res) => {
   res.status(500).json({
     status: "error",
-    message: "This route is not yet defined!", // Fehlermeldung, dass die Route noch nicht definiert ist
+    message: "This route is not yet defined!",
   });
 };

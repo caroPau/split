@@ -1,6 +1,6 @@
 // Importiere notwendige Module und Modelle
 const User = require("../models/userModel"); // User-Modell für den Zugriff auf die Benutzerdatenbank
-const jwt = require("jsonwebtoken"); // jsonwebtoken für das Erstellen und Verifizieren von JWTs (JSON Web Tokens)
+const jwt = require("jsonwebtoken"); // jsonwebtoken für das Erstellen und Verifizieren von JWTs
 
 // Login-Funktion
 exports.login = async (req, res, next) => {
@@ -51,7 +51,7 @@ exports.login = async (req, res, next) => {
         console.error(err); // Fehlerbehandlung und Ausgabe von Fehlern, die während der Passwortüberprüfung auftreten
       });
   } catch (error) {
-    console.log("ERROR: ", error); // Fehlerbehandlung und Ausgabe von Fehlern
+    console.log("ERROR: ", error);
     res.status(500).send("Server Error"); // Fehlermeldung bei Serverfehler
   }
 };

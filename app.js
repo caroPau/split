@@ -42,12 +42,11 @@ app.get("/logout", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "logout.html")); // Sendet die "logout.html"-Datei bei GET-Anfrage an "/logout"
 });
 
-// Body-Parser, liest JSON-Daten aus dem Anfragekörper
 app.use(express.json({ limit: "10kb" })); // Beschränkt die Größe der JSON-Nachricht auf 10KB
 
 // Test-Middleware, fügt die Anfragezeit zur Anfrage hinzu
 app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString(); // Fügt das aktuelle Datum und die Uhrzeit zur Anfrage hinzu
+  req.requestTime = new Date().toISOString();
   next(); // Übergibt die Anfrage an die nächste Middleware
 });
 
@@ -64,4 +63,4 @@ app.all("*", (req, res, next) => {
 });
 
 // Exportiere die Express-Anwendung
-module.exports = app; // Exportiert die Express-Anwendung
+module.exports = app;

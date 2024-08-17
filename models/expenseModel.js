@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 // Definiere das Schema für Ausgaben (Expenses)
 const expenseSchema = new mongoose.Schema({
   description: {
-    type: String, // Beschreibung der Ausgabe
-    required: [true, "Please provide a description"], // Pflichtfeld mit Fehlermeldung bei Fehlen
+    type: String,
+    required: [true, "Please provide a description"],
   },
   amount: {
-    type: Number, // Betrag der Ausgabe
-    required: [true, "Please provide an amount"], // Pflichtfeld mit Fehlermeldung bei Fehlen
+    type: Number,
+    required: [true, "Please provide an amount"],
   },
   group: {
     type: mongoose.Schema.Types.ObjectId, // Referenz zur Gruppe, der die Ausgabe zugeordnet ist

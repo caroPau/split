@@ -9,7 +9,8 @@ dotenv.config({ path: "./.env" });
 // Importiere die Express-App aus der app.js
 const app = require("./app");
 
-// Ersetze das Platzhalter-Passwort in der Datenbank-URL mit dem tatsächlichen Passwort aus den Umgebungsvariablen
+// Setzt die Datenbank-URI entweder auf den Wert der Umgebungsvariable
+// oder auf die lokale MongoDB-URI falls die Umgebungsvariable nicht definiert ist.
 const DB = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/splitmate";
 
 // Verbinde mit der MongoDB-Datenbank

@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-// const User = require("./userModel"); // Modell für Benutzer (optional importiert, aber momentan auskommentiert)
 
 // Definiere das Schema für Gruppen
 const groupSchema = new mongoose.Schema({
   groupName: {
-    type: String, // Name der Gruppe
+    type: String,
     required: [true, "Please provide a groupname"], // Pflichtfeld mit Fehlermeldung bei Fehlen
     unique: false,
   },
